@@ -35,7 +35,6 @@ but a consensus formed across continuity.
 
 The evidence of that continuity is canonical continuation.
 
-여기에 삽입
 
 1. Introduction
 
@@ -104,7 +103,7 @@ Canonical lineage represents the original continuity.
 
 Forked lineage cannot reproduce canonical continuation.
 
-여기에 삽입
+
 
 4. Trajectory Reconstruction Problem (TRP)
 
@@ -137,7 +136,7 @@ Forked trajectory diverges immediately.
 
 This implies canonical continuation cannot be predicted.
 
-여기에 삽입
+
 
 5. Experimental observations
 
