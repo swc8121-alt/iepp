@@ -1,4 +1,15 @@
 IEPP v0.4 — Entropy Lineage & TRP
+
+Full illustrated version:
+
+https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-4/
+
+---
+
+Philosophical foundation
+
+
+IEPP v0.4 — Entropy Lineage & TRP
 Philosophical foundation
 
 Ship of Theseus — interpretation from the IEPP perspective.
