@@ -1,5 +1,19 @@
 # IEPP — Intrinsic Entropy Proof of Presence
 
+Official whitepaper:
+
+IEPP v0.4  
+https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-4/
+
+IEPP v0.5  
+https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-5/
+
+---
+
+Trajectory-based identity protocol using intrinsic entropy and continuity verification.
+
+# IEPP — Intrinsic Entropy Proof of Presence
+
 Trajectory-based identity protocol using intrinsic entropy and continuity verification.
 
 IEPP proposes a new identity paradigm:
