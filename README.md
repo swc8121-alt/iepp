@@ -23,9 +23,9 @@ Concept evolution history:
 |---|---|---|
 | v0.1 | Concept introduction | https://entropyproof.com/ |
 | v0.2 | Experimental validation | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-2-experimental-validation/ |
-| v0.3 | Continuity-based identity formulation | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-3/ |
-| v0.4 | Canonical lineage & statistical limits | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-4/ |
-| v0.5 | TRP formulation & policy layer proposal | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-5/ |
+| v0.3 | Trajectory Continuity as Existence Verification | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-3/ |
+| v0.4 | Entropy Lineage & TRP Hardness | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-4/ |
+| v0.5 | Policy & Deployment Proposal for Trajectory-Based Identity | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-5/ |
 
 ---
 
