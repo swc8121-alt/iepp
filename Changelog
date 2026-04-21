@@ -1,0 +1,68 @@
+# IEPP Changelog
+
+All notable changes to this research project are documented here.
+
+---
+
+## v0.5 (in progress)
+- TRP hardness formal conjecture
+- Policy layer separation
+- Genesis registry proposal
+- Multi-layer application examples
+
+---
+
+## v0.4
+**Canonical Lineage and the Limits of Statistical Identity**
+
+- Autocorrelation-based clone detection experiment (50 runs)
+- Key finding: statistical metrics cannot separate clone from original
+  - ORIG-FORK gap: -0.047 (not separable)
+  - Attacker clearly separated: score 0.10 vs 0.52
+- Two-layer identity model established:
+  - Layer A: statistical anomaly detection (attacker detection)
+  - Layer B: canonical lineage verification (clone discrimination)
+- IEPP scope clarified: measurement layer only
+- Open questions documented for application designers
+- Future vision: genesis registry concept introduced
+
+---
+
+## v0.3
+**Trajectory Continuity as Existence Verification**
+
+- Core reframe: from possession to continuity
+- Trajectory Reconstruction Problem (TRP) introduced
+- Three-layer verification structure defined:
+  - Layer 1: Challenge binding
+  - Layer 2: Commitment chain
+  - Layer 3: Statistical continuity
+- Threat model explicitly scoped (Level 1-4)
+- Experimental results:
+  - fork divergence rate: 100% (100 runs)
+  - attacker success rate: 0.0% (50,000 attempts)
+  - Layer 3 clone gap: 0.015 (insufficient)
+- state_commit introduced (internal state not exposed)
+- Baseline characterization (50 runs)
+
+---
+
+## v0.2
+**Experimental Validation**
+
+- Google Colab reproducible experiments
+- Uniqueness test: 0 collisions across 5,000,000 iterations
+- Multi-prover simulation: 50 provers, 200,000 requests
+- Attacker model simulation: 0% forgery success
+- Physical-like entropy simulation
+- PCT patent application filed
+
+---
+
+## v0.1
+**Concept Introduction**
+
+- Initial problem statement
+- Entropy fingerprint concept
+- Core formulation: R = H(E || C || T || S)
+- Positioning relative to existing approaches
