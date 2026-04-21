@@ -1,0 +1,65 @@
+# IEPP Experiments
+
+Reproducible experimental validation for the IEPP protocol.
+
+All notebooks run in Google Colab without additional setup.
+
+---
+
+## iepp_v03_merged.py
+
+**Three-Layer Trajectory Plausibility Verifier**
+
+Tests the three-layer verification structure:
+- Layer 1: Challenge binding (replay defense)
+- Layer 2: Commitment chain (forgery detection)
+- Layer 3: Statistical continuity (anomaly detection)
+
+Compares three entities: ORIGINAL / FORK (clone) / ATTACKER
+
+Key results:
+- fork_match_rate: 0.0 (100 runs)
+- attacker_success_rate: 0.0
+- Layer 3 ORIG-FORK gap: 0.015 (insufficient for clone detection)
+
+---
+
+## iepp_v04.py
+
+**Autocorrelation-based Clone Detection**
+
+Investigates whether temporal autocorrelation of norm sequences
+can separate original from cloned trajectories.
+
+New metrics:
+- autocorr_lag1, autocorr_lag2
+- std_velocity, mean_acceleration
+
+Key results:
+- ATTACKER clearly separated: clone_score 0.10 vs 0.52
+- ORIG-FORK gap: -0.047 (NOT separable statistically)
+- Conclusion: canonical lineage verification required for clone detection
+
+---
+
+## How to run
+
+1. Open file in Google Colab
+2. Run all cells
+3. Results print automatically
+
+No API keys or external dependencies required.
+Only standard Python libraries: numpy, pandas, hashlib, os
+
+---
+
+## Reproducing results
+
+All experiments use:
+- os.urandom() for runtime entropy
+- SHA-256 for hashing
+- numpy for state evolution
+- sleep(0.001) between steps for timing variation
+
+Results may vary slightly between runs due to runtime entropy.
+Aggregate statistics (100 runs) are stable.
