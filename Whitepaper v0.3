@@ -1,0 +1,389 @@
+# IEPP Whitepaper v0.3
+# Trajectory Continuity as Existence Verification
+
+---
+
+## Abstract
+
+IEPP (Intrinsic Entropy Proof Protocol) proposes a structural method for existence
+verification based on trajectory continuity rather than static identity or pre-shared secrets.
+
+Unlike traditional authentication mechanisms that rely on shared secret keys, IEPP explores
+a verification model where existence is demonstrated through the continuity of an evolving
+internal state trajectory — a property that is computationally and physically difficult to
+replicate without being the originating entity.
+
+Experimental simulations conducted in reproducible Google Colab environments demonstrate:
+
+- 100% immediate trajectory divergence upon cloning (100 runs)
+- 0% attacker success rate across five attack categories (50,000 attempts)
+- Stable three-layer verification structure across diverse entropy configurations
+
+IEPP is positioned as a foundational trust primitive for AI agents, digital entities,
+and distributed autonomous systems operating in environments where replication cost
+approaches zero.
+
+Note: Core structural concepts have been filed under the PCT framework.
+Specific implementation details are disclosed progressively following filing milestones.
+
+---
+
+## 1. Problem Statement
+
+As generative AI systems scale, the marginal cost of producing synthetic content
+approaches zero. This creates a structural authenticity imbalance: distinguishing a
+genuine AI agent from a replica becomes increasingly difficult using traditional methods.
+
+Traditional verification assumes one of two models:
+
+**Static identity model** — the entity has a fixed identifier (hash, certificate, key).
+Trivially defeated when an adversary can copy the identifier.
+
+**Shared secret model** — the verifier and prover share a secret key (HMAC, TOTP).
+Requires prior key distribution and assumes the verifier holds the secret.
+
+Neither model addresses the core problem of AI agents:
+
+> An entity may be bit-for-bit identical to another entity at the moment of cloning,
+> yet their subsequent existence trajectories will diverge.
+
+The question IEPP asks is not:
+*"Does this entity know the secret?"*
+
+but:
+*"Is this entity on the same continuous trajectory as before?"*
+
+When replication becomes trivial, continuity becomes the meaningful signal.
+
+---
+
+## 2. Core Concept: Trajectory as Identity
+
+### 2.1 From Possession to Continuity
+
+Traditional authentication binds identity to possession of a secret.
+IEPP binds identity to continuity of an evolving internal state trajectory.
+
+The key insight:
+
+> Even if an adversary observes all public outputs R₁, R₂, ..., Rₙ,
+> and knows the algorithm structure,
+> they cannot reconstruct the internal state trajectory
+> required to generate Rₙ₊₁ — without being the originating entity.
+
+This property is termed **Non-deterministic State Dependency**:
+the information required to generate Rₙ₊₁ is not fully observable from external outputs.
+
+### 2.2 Trajectory Reconstruction Problem
+
+IEPP's security model depends on the computational and physical difficulty of
+reconstructing an internal state trajectory from external observations alone.
+
+Formally, the adversary's problem is:
+
+Given: R₁, R₂, ..., Rₙ and all challenge inputs C₁, C₂, ..., Cₙ
+Find: internal_stateₙ such that Rₙ₊₁ can be correctly generated
+
+This is termed the **Trajectory Reconstruction Problem (TRP)**.
+
+The difficulty of TRP depends on three conditions:
+
+1. The internal state must have sufficient dimensionality
+2. Stochastic elements must induce trajectory divergence at each step
+3. External observations must not fully determine the internal state
+
+These conditions are experimentally evaluated in Section 5.
+
+### 2.3 Distinction from Existing Approaches
+
+| Property | IEPP | HMAC | Digital Signature | Hash Chain |
+|---|---|---|---|---|
+| Pre-shared secret required | No | Yes | Yes | No |
+| Verifier holds secret | No | Yes | Yes | No |
+| Replay resistance | Yes | Partial | Partial | No |
+| State continuity verification | Yes | No | No | Partial |
+| Clone detection (statistical) | Explored | No | No | No |
+| AI-native identity model | Yes | No | No | No |
+
+The structural difference from HMAC is significant:
+
+**HMAC**: verifier knows secret_key → verifies H(secret_key, message)
+**IEPP**: verifier knows only prior response Rₙ → verifies trajectory plausibility
+
+The verifier does not need to hold or know any secret.
+
+---
+
+## 3. Three-Layer Verification Structure
+
+IEPP verification operates across three complementary layers.
+Each layer addresses a different threat model.
+
+### Layer 1 — Challenge Binding
+
+Each response is bound to an externally provided challenge.
+
+```
+Rₙ₊₁ = H(Rₙ || Cₙ₊₁ || commitment(stateₙ₊₁))
+```
+
+This prevents:
+- Replay attacks (prior responses cannot be reused for new challenges)
+- Pre-computation attacks (future challenges are unknown)
+
+### Layer 2 — Commitment Chain
+
+Each response includes a cryptographic commitment to the current internal state,
+without revealing the state itself.
+
+```
+commitmentₙ = H(stateₙ)
+```
+
+The verifier confirms the commitment chain is unbroken without needing to know
+the actual state values.
+
+This prevents:
+- Structural forgery (attacker cannot fabricate a valid chain without the internal state)
+- State substitution attacks
+
+### Layer 3 — Statistical Continuity
+
+The verifier evaluates the plausibility of the response sequence as a whole,
+rather than verifying any single response in isolation.
+
+Metrics evaluated include:
+- Norm trajectory continuity (jump magnitude, distribution shift)
+- Response sequence entropy
+- Temporal autocorrelation of state evolution
+- Velocity and acceleration of state norm progression
+
+A **continuity score** is computed from these metrics.
+Trajectories that diverge statistically from baseline behavior are flagged as anomalous.
+
+This layer addresses:
+- Clone detection (forked trajectories may exhibit divergent statistical patterns)
+- Deterministic imitation attacks (artificially smooth trajectories are detectable)
+
+Note: Layer 3 is currently experimental. Separation between genuine and cloned
+trajectories using statistical metrics alone is an active research problem (see Section 6).
+
+---
+
+## 4. Security Assumptions
+
+IEPP's security model is grounded in the following explicit assumptions.
+
+### 4.1 Threat Model Scope
+
+IEPP addresses threats at **Level 1 and Level 2**:
+
+**Level 1 — External observer**: observes only network-level outputs (Rₙ sequence).
+Cannot reconstruct internal state from public outputs alone.
+
+**Level 2 — Software-level adversary**: has access to process memory, timing signals,
+and side-channel information on the same OS instance.
+Runtime entropy sources provide resistance, but cannot fully exclude this threat.
+
+**Level 3 — Hypervisor/cloud infrastructure**: infrastructure provider can observe
+or snapshot VM state. Pure software implementations cannot fully defend against this level.
+Infrastructure providers are treated as **trusted** in the current threat model.
+
+**Level 4 — Physical access**: hardware-level cloning. Out of scope for software
+implementations. Hardware PUF integration is a future research direction.
+
+### 4.2 Security Basis
+
+IEPP does not rely on algorithm secrecy.
+Security derives from two sources:
+
+1. **Entropy availability**: runtime entropy sources inject non-deterministic values
+   at each step that are not fully observable from external outputs.
+
+2. **Trajectory reconstruction difficulty**: even with full knowledge of the algorithm
+   and all prior public outputs, reconstructing the internal state required for
+   continuation is computationally or physically infeasible under the threat model.
+
+### 4.3 Explicit Limitations
+
+The following are not claimed:
+
+- Formal cryptographic proof of TRP hardness (this is an open problem)
+- Defense against Level 3 or Level 4 adversaries without hardware support
+- Clone detection via statistical metrics alone (Layer 3 is exploratory)
+
+---
+
+## 5. Experimental Validation
+
+All experiments were conducted in reproducible Google Colab environments.
+Source code is available for independent verification.
+
+### 5.1 Baseline Characterization
+
+50 independent trajectory runs (40 steps each) were used to establish
+baseline statistical properties of genuine trajectories.
+
+Key baseline metrics:
+
+| metric | mean | std |
+|---|---|---|
+| max_jump | 0.471 | 0.135 |
+| distribution_shift | 0.432 | 0.022 |
+| response_entropy | 3.996 | 0.001 |
+
+The low standard deviation of response_entropy indicates
+highly stable entropy characteristics across independent runs.
+
+### 5.2 Fork Divergence Test
+
+**Setup**: original prover runs for 12 steps, then cloned.
+Both original and clone continue independently from step 13.
+
+**Result** (100 runs):
+
+| metric | value |
+|---|---|
+| avg_fork_match_rate | 0.0 |
+| immediate_divergence_rate | 1.0 |
+| avg_first_divergence | step 13 |
+
+Interpretation: In all 100 runs, trajectories diverged immediately
+at the first step following cloning. No two cloned trajectories
+produced identical responses.
+
+### 5.3 Attacker Model Test
+
+Five attack categories were evaluated (10,000 attempts each):
+
+| attack type | attempts | success | success rate |
+|---|---|---|---|
+| A: replay last response | 10,000 | 0 | 0.0% |
+| B: replay random prior response | 10,000 | 0 | 0.0% |
+| C: challenge substitution | 10,000 | 0 | 0.0% |
+| D: secret guessing forgery | 10,000 | 0 | 0.0% |
+| E: seeded PRNG imitation | 10,000 | 0 | 0.0% |
+
+All five attack categories produced 0% success rate.
+
+Primary rejection mechanisms:
+- replay detection (seen_response_hashes)
+- fingerprint mismatch (attacker cannot reproduce internal state)
+- non-monotonic state progression
+
+### 5.4 Statistical Continuity Results (v0.3)
+
+Layer 3 continuity scores across 100 runs:
+
+| segment | avg_continuity_score |
+|---|---|
+| pre-fork (original) | 0.586 |
+| post-fork (original) | 0.842 |
+| post-fork (clone) | 0.827 |
+
+Observation: The gap between post-fork original (0.842) and clone (0.827)
+is 0.015 — insufficient for reliable clone detection using current metrics alone.
+
+This confirms that Layer 3 statistical metrics require further development.
+Autocorrelation-based metrics (v0.4, in progress) are being evaluated
+to improve clone/original separation.
+
+### 5.5 Summary
+
+| property | observed result |
+|---|---|
+| Trajectory uniqueness | 100% (0 collisions across all runs) |
+| Immediate fork divergence | 100% (100/100 runs) |
+| Attacker success rate | 0.0% (50,000 total attempts) |
+| Clone detection (Layer 3) | Exploratory — gap insufficient |
+
+---
+
+## 6. Open Problems and Roadmap
+
+The following problems remain open and define the research roadmap.
+
+### 6.1 Trajectory Reconstruction Problem Formalization
+
+The TRP has not yet been formally defined in the computational complexity sense.
+A formal definition — analogous to the hardness assumptions underlying RSA or ECDH —
+is required to establish IEPP on a rigorous security foundation.
+
+Target formulation:
+
+> Given R₁...Rₙ and C₁...Cₙ, no probabilistic polynomial-time algorithm
+> can produce Rₙ₊₁ with probability non-negligibly greater than random.
+
+### 6.2 Clone Detection via Trajectory Statistics
+
+Current Layer 3 metrics do not sufficiently separate original from cloned trajectories
+(gap: 0.015). Candidate approaches under investigation:
+
+- Lag-1 and lag-2 autocorrelation of norm sequences
+- Velocity and acceleration of state norm progression
+- Cross-trajectory divergence rate measurement
+
+Results from v0.4 experiments will be reported in the next whitepaper update.
+
+### 6.3 Entropy Source Minimum Conditions
+
+The minimum entropy source requirements for IEPP security guarantees
+have not yet been formally specified.
+Current implementations use OS-level randomness (os.urandom),
+but the conditions under which weaker entropy sources remain sufficient are undefined.
+
+### 6.4 Hardware Integration Path
+
+Defense against Level 3 adversaries requires hardware-anchored entropy.
+Integration paths with TPM 2.0 and hardware PUF architectures are under consideration.
+
+---
+
+## 7. Scope and Positioning
+
+IEPP is not proposed as a replacement for existing cryptographic primitives.
+
+It explores an additional structural layer:
+**existence verification through trajectory continuity**,
+applicable in environments where entity replication cost approaches zero.
+
+Target application domains:
+
+- AI agent identity verification
+- Synthetic content provenance
+- Digital avatar and virtual entity authentication
+- Distributed autonomous system trust primitives
+- Device identity in virtualized environments
+
+---
+
+## 8. Implementation and Filing Status
+
+Core structural concepts have been filed under the PCT framework.
+
+Specific implementation parameters, entropy source configurations,
+and verification algorithms are subject to progressive disclosure
+following patent prosecution milestones.
+
+Experimental code used in this whitepaper is available for
+independent reproduction in Google Colab environments.
+
+---
+
+## Closing Note
+
+Traditional authentication asks: *does this entity know the secret?*
+
+IEPP asks: *is this entity still on the same trajectory?*
+
+When replication becomes trivial, the meaningful question shifts
+from possession to continuity.
+
+Whether continuity can serve as a verifiable, forgery-resistant signal
+is the central open question this protocol explores.
+
+---
+
+*IEPP Whitepaper v0.3 — Trajectory Continuity as Existence Verification*
+*Updated from v0.2 based on extended experimental validation and threat model analysis.*
+*PCT filing pending. Specific implementation details withheld pending prosecution.*
