@@ -15,6 +15,10 @@ but by continuity of existence over time.
 
 ---
 
+Early-stage research repository for IEPP (Intrinsic Entropy Proof of Presence).
+Experimental code and evolving whitepapers are shared for transparency and discussion.
+
+
 ## Whitepaper series
 
 Concept evolution history:
