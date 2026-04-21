@@ -1,0 +1,259 @@
+# IEPP Whitepaper v0.5
+# Policy & Deployment Proposal for Trajectory-Based Identity
+
+---
+
+## 1. Purpose of the Policy Layer
+
+IEPP is not intended to function solely as a cryptographic primitive.
+
+It is designed as an infrastructure component capable of supporting
+identity continuity for:
+
+- AI agents
+- avatars
+- digital entities
+- autonomous systems
+- digital assets
+
+As AI systems become capable of replication, migration, and continuous
+self-modification, identity can no longer be defined solely by static attributes.
+
+A policy layer enables practical deployment of IEPP in real-world systems.
+
+Key requirements include:
+
+- multi-proof authentication options
+- continuous authentication capability
+- automatic alert and reporting triggers
+- canonical lineage governance structures
+- hardware trust anchors
+- public verification layers
+
+IEPP can therefore be considered a candidate architecture for trust
+infrastructure in AI-native environments.
+
+---
+
+## 2. Multi-proof Authentication
+
+Traditional authentication often relies on a single challenge-response interaction.
+
+IEPP allows multiple sequential challenge-response steps to be used
+as part of the authentication process.
+
+Example configurations: 3-step, 5-step, n-step trajectory verification.
+
+Advantages:
+
+- increases difficulty of maintaining clone synchronization
+- reduces probability of replay success
+- increases trajectory consistency requirements
+- improves confidence in continuity verification
+
+Multi-proof authentication transforms identity verification from a
+single point-in-time snapshot into a trajectory verification process.
+
+---
+
+## 3. Continuous Authentication
+
+IEPP supports periodic or continuous verification of existence continuity.
+
+Possible use cases:
+
+- continuous verification after login
+- verification during AI agent execution
+- long-duration session integrity monitoring
+- runtime integrity validation
+
+Continuous authentication enables detection of divergence events
+during operation rather than only at initialization.
+
+Advantages:
+
+- detects clone divergence in real time
+- reduces impact of session hijacking
+- supports persistent identity continuity monitoring
+
+---
+
+## 4. Automatic Alert and Reporting Triggers
+
+IEPP divergence events can be used as triggers for automated policy responses.
+
+Possible trigger conditions:
+
+- canonical lineage mismatch
+- unexpected trajectory divergence
+- replay detection
+- non-monotonic state transitions
+- abnormal entropy characteristics
+
+Possible automated actions:
+
+- generate alert events
+- block access attempts
+- increase risk score
+- log security incidents
+- notify monitoring systems
+
+IEPP can therefore function as both a verification mechanism
+and a trigger source for security orchestration.
+
+---
+
+## 5. Synergy with PUF (Physical Unclonable Function)
+
+PUF technologies provide hardware-level uniqueness derived from manufacturing variation.
+
+IEPP and PUF provide complementary roles:
+
+```
+PUF:  provides root uniqueness anchor (hardware)
+IEPP: provides continuity of identity through time (software)
+
+Combined: hardware uniqueness + trajectory continuity
+```
+
+Potential advantages:
+
+- stronger resistance to cloning attacks
+- hardware-rooted identity continuity
+- additional entropy sources
+
+---
+
+## 6. Relationship with Blockchain or Public Ledgers
+
+IEPP does not require blockchain in order to function.
+
+However, distributed ledgers may optionally provide:
+
+- public auditability
+- tamper-evident logging
+- canonical lineage anchoring
+- dispute resolution support
+
+Blockchain may therefore serve as an optional transparency layer
+rather than a required component.
+
+IEPP remains functional without reliance on blockchain infrastructure.
+
+---
+
+## 7. Canonical Registry Concept
+
+A canonical registry may act as a reference point for trajectory continuity.
+
+Possible roles:
+
+- store canonical lineage anchors
+- support divergence comparison
+- provide identity continuity references
+- assist dispute resolution
+
+A canonical registry functions similarly to a digital title registry.
+Its purpose is to provide a consistent reference point for continuity evaluation.
+
+Policy, governance, and canonical selection decisions belong to
+the application and trust framework layers — not to IEPP itself.
+
+---
+
+## 8. Integration with AI-generated Fingerprint Methods (Preview)
+
+Ongoing research explores combining IEPP with AI-generated
+intrinsic fingerprint structures.
+
+Possible structure:
+
+```
+Creation-phase fingerprint  →  establishes origin anchor
+Runtime entropy lineage     →  establishes continuity proof
+
+Result: origin identity + continuity identity
+```
+
+This combination may support both:
+
+- verification of originality
+- verification of continuous existence
+
+*This section references ongoing work not fully disclosed in this document.*
+
+---
+
+## 9. Multi-layer Trust Stack
+
+IEPP may function as part of a layered trust architecture.
+
+```
+Layer 1 — Challenge-response binding
+Layer 2 — Trajectory continuity linkage
+Layer 3 — Statistical anomaly detection
+Layer 4 — Hardware entropy sources (optional)
+Layer 5 — Public audit infrastructure (optional)
+```
+
+Different environments may choose different combinations of layers.
+The layered structure allows flexible deployment depending on
+security requirements.
+
+---
+
+## 10. Open Questions for Application Designers
+
+Several questions remain open for future research and policy development.
+
+**On canonical lineage:**
+- Who defines canonical lineage in distributed environments?
+- How should canonical continuation be selected when forks occur?
+- If the original is deleted, does the longest surviving chain inherit canonical status?
+
+**On continuity:**
+- How should offline systems maintain continuity?
+- What is the minimum continuity gap that constitutes identity discontinuity?
+- Can a pre-shutdown state commitment serve as a restart anchor?
+
+**On governance:**
+- What balance should be maintained between privacy and auditability?
+- How should false positive divergence detection be handled?
+- How should automatic alert thresholds be calibrated?
+
+**On standards:**
+- What standard interfaces should be defined for AI agents?
+- How should hardware entropy sources be standardized?
+- How should runtime lineage integrate with creation fingerprint identity?
+
+IEPP is intended as a foundation for further exploration
+rather than a finalized standard.
+
+The questions above are not answered by IEPP.
+They are left intentionally for application designers,
+governance architects, and future researchers.
+
+---
+
+## Closing Note
+
+*Traditional authentication asks: does this entity know the secret?*
+
+*IEPP asks: is this entity still on the same trajectory?*
+
+*And now: how long has this entity been continuously itself?*
+
+Existence is not a binary state.
+It is accumulated, step by step,
+through a chain of responses that no replica can reproduce
+and no attacker can forge.
+
+Whether that accumulation constitutes identity —
+and who gets to decide —
+is the question we leave to you.
+
+---
+
+*IEPP Whitepaper v0.5*
+*Policy & Deployment Proposal for Trajectory-Based Identity*
+*PCT filing pending. entropyproof.com*
