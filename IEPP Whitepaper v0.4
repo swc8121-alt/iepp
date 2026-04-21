@@ -1,0 +1,334 @@
+# IEPP Whitepaper v0.4
+# Canonical Lineage and the Limits of Statistical Identity
+
+---
+
+## Abstract
+
+IEPP (Intrinsic Entropy Proof Protocol) v0.4 presents two findings that
+together define the boundary of what trajectory-based existence verification
+can and cannot determine.
+
+**What statistical metrics can do:**
+Structural attackers — entities that forge responses without access to
+internal state — are reliably detected. Attacker clone_score: 0.10
+versus genuine trajectory score: 0.52.
+
+**What statistical metrics cannot do:**
+Cloned trajectories are statistically indistinguishable from originals.
+ORIG-FORK gap: -0.047. This is not a failure of implementation.
+It is a structural property of the problem.
+
+**The resulting conclusion:**
+Clone discrimination requires canonical lineage verification, not
+statistical similarity measurement. Existence is not determined by
+resemblance. It is accumulated by continuity.
+
+Core structural concepts have been filed under the PCT framework.
+Specific implementation details are disclosed progressively
+following filing milestones.
+
+---
+
+## 1. What v0.4 Set Out to Answer
+
+v0.3 established that trajectory divergence is immediate and complete
+upon cloning. However, the continuity_score gap between original and
+clone was 0.014 — insufficient for reliable discrimination.
+
+v0.4 investigated whether richer statistical features — specifically
+temporal autocorrelation of norm sequences, velocity, and acceleration
+— could improve clone detection.
+
+The answer is: no. And that answer is important.
+
+---
+
+## 2. Experimental Results
+
+### 2.1 Baseline
+
+50 independent trajectory runs established the following baseline:
+
+| metric | mean | std |
+|---|---|---|
+| autocorr_lag1 | 0.721 | 0.049 |
+| std_velocity | 0.181 | 0.035 |
+
+The high autocorr_lag1 mean (0.721) confirms that genuine trajectories
+exhibit strong temporal self-correlation — each state is meaningfully
+connected to the previous one.
+
+### 2.2 Three-Entity Comparison (50 runs)
+
+| entity | avg_clone_score | avg_autocorr_lag1 | avg_std_velocity | pct_genuine |
+|---|---|---|---|---|
+| ORIGINAL | 0.5227 | 0.785 | 0.072 | 32% |
+| FORK (clone) | 0.5701 | 0.762 | 0.081 | 48% |
+| ATTACKER | 0.1003 | -0.001 | 0.305 | 0% |
+
+### 2.3 Key Finding
+
+```
+ORIGINAL  avg clone_score : 0.5227
+FORK      avg clone_score : 0.5701
+ATTACKER  avg clone_score : 0.1003
+
+ORIG-FORK gap : -0.047  ← NOT separable
+```
+
+ATTACKER is clearly separated from both ORIGINAL and FORK.
+ORIGINAL and FORK are not separable by any statistical metric tested.
+
+### 2.4 Why Clone and Original Are Statistically Identical
+
+A clone inherits the exact internal state at the moment of forking.
+Both entities then evolve using the same algorithm responding to the
+same challenges. Their statistical distributions converge naturally.
+
+This is not a weakness of the measurement approach.
+It is a mathematical consequence of the cloning operation itself.
+
+No statistical metric applied to post-fork trajectories alone can
+reliably identify which branch is the original.
+
+---
+
+## 3. The Two-Layer Identity Model
+
+v0.4 results establish a clear two-layer structure:
+
+### Layer A — Statistical Anomaly Detection
+
+Statistical metrics detect structural attackers reliably.
+
+An attacker without access to internal state produces trajectories
+with near-zero autocorrelation and abnormal velocity patterns.
+This is detectable.
+
+Use case: real-time anomaly flagging, forgery detection,
+structural integrity monitoring.
+
+### Layer B — Canonical Lineage Verification
+
+Clone discrimination requires a recorded canonical chain.
+
+```
+verifier records:  R_n at each step
+clone produces:    R_n' ≠ R_n  (runtime entropy diverges immediately)
+original produces: R_n  (matches recorded canonical value exactly)
+```
+
+canonical original match rate : 100%
+canonical fork match rate     : 0%
+first mismatch                : step 0 (immediately after fork)
+
+Use case: identity continuity proof, lineage auditing,
+existence verification over time.
+
+---
+
+## 4. Scope and Layer Boundaries
+
+IEPP defines the measurement and verification layer.
+It does not define policy, governance, or canonical selection.
+
+```
+┌─────────────────────────────────────────┐
+│  Layer 3: Governance / Policy           │
+│  Who is canonical? Dispute resolution.  │
+│  → Decided by users, institutions,      │
+│    trust frameworks                     │
+├─────────────────────────────────────────┤
+│  Layer 2: Application                   │
+│  Canonical selection, branch management │
+│  → Decided by platforms, services       │
+├─────────────────────────────────────────┤
+│  Layer 1: IEPP Protocol                 │
+│  continuity verification                │
+│  divergence detection                   │
+│  lineage auditability                   │
+│  → This is what IEPP provides           │
+└─────────────────────────────────────────┘
+```
+
+This boundary is intentional, not a limitation.
+
+TCP/IP does not determine which data is correct.
+DNS does not determine which domain is trustworthy.
+IEPP does not determine which trajectory is canonical.
+
+IEPP provides the measurement.
+The application decides what to do with it.
+
+---
+
+## 5. Open Questions
+
+The following questions are not answered by IEPP.
+They are left intentionally for application designers,
+governance architects, and future researchers.
+
+### 5.1 What happens when the original is deleted?
+
+If the original entity is terminated, its trajectory record remains.
+The chain it produced is a permanent artifact of its existence.
+
+But if a clone continues after the original is gone:
+- Is the clone now the original?
+- Does the longest surviving chain inherit canonical status?
+- Or does the fork label persist permanently?
+
+**Hint:** Longest chain rule — the entity with the longest
+unbroken continuity may be considered the de facto original
+by application-layer consensus. This mirrors how blockchain
+networks resolve competing chains without central authority.
+
+### 5.2 What if two forks diverge simultaneously?
+
+At the moment of forking, both entities have equal claim.
+Neither is statistically distinguishable from the other.
+
+- Should fork events be witnessed and recorded at the moment they occur?
+- Can a witness system — a third entity that observes the fork —
+  provide verifiable fork timestamps?
+
+**Hint:** A designated fork witness could record both R_n values
+at the moment of divergence, providing an auditable fork certificate
+without determining which branch is canonical.
+
+### 5.3 Can continuity length serve as existence weight?
+
+A trajectory of 10,000 steps carries more existence evidence
+than one of 10 steps — even if both are statistically similar.
+
+- Should continuity length factor into trust scoring?
+- Can accumulated continuity function as a reputation signal?
+
+**Hint:** Existence is not binary. It may be quantifiable.
+An entity that has maintained continuous verifiable trajectory
+for longer has, in a meaningful sense, existed more.
+
+### 5.4 What is identity after restart?
+
+An AI agent that is shut down and restarted has a gap in its trajectory.
+The internal state before shutdown cannot be recovered.
+
+- Is a restarted agent the same entity or a new one?
+- Can a pre-shutdown state commitment serve as a restart anchor?
+- What is the minimum continuity gap that constitutes identity discontinuity?
+
+**Hint:** A final state commitment recorded before shutdown
+could serve as a genesis anchor for the restarted trajectory,
+allowing continuity to be re-established from a known checkpoint.
+
+---
+
+## 6. Future Vision: The Genesis Registry
+
+*This section is speculative. It describes a possible future direction,
+not a current implementation.*
+
+Today, origin is established by trusted institutions:
+patent offices record invention priority,
+notaries record document authenticity,
+timestamp authorities record digital creation moments.
+
+As AI governance frameworks mature, a new kind of origin registry
+may become necessary — one designed specifically for AI entities.
+
+A possible structure:
+
+```
+AI entity created
+      ↓
+Registers first trajectory commitment
+with a designated Genesis Registry
+      ↓
+Registry records: entity_id, R_0, timestamp, context
+      ↓
+All subsequent continuity verified against this anchor
+```
+
+This would function as a birth record for AI entities.
+
+IEPP provides the continuity proof.
+The Genesis Registry provides the origin anchor.
+Together, they form a complete existence verification stack:
+
+```
+Genesis Registry  →  "this entity was created at time T"
+IEPP              →  "this entity has existed continuously since T"
+```
+
+The registry itself need not be centralized.
+It could be distributed, institutional, or AI-native —
+an AI system designated to witness and record the genesis
+of other AI entities.
+
+The policy questions — who operates the registry, what
+constitutes valid registration, how disputes are resolved —
+remain outside IEPP's scope. They belong to the governance layer.
+
+What IEPP contributes is the lower layer:
+a verifiable, forgery-resistant continuity record
+that any registry can anchor to.
+
+---
+
+## 7. What IEPP Does and Does Not Claim
+
+### Does claim:
+- Structural attackers are detectable via statistical trajectory analysis
+- Cloned trajectories diverge immediately and permanently from originals
+- Canonical lineage verification provides definitive clone discrimination
+- The three-layer verification structure (challenge binding,
+  commitment chain, statistical continuity) provides layered defense
+
+### Does not claim:
+- Formal cryptographic proof of Trajectory Reconstruction Problem hardness
+- Clone detection via statistical metrics alone
+- Defense against Level 3 (infrastructure) or Level 4 (physical) adversaries
+- Canonical selection — this is an application layer decision
+- Governance of AI identity — this belongs to trust frameworks
+
+---
+
+## 8. Roadmap
+
+| version | focus |
+|---|---|
+| v0.1 | concept and initial formulation |
+| v0.2 | experimental validation, attacker model |
+| v0.3 | trajectory continuity framing, lineage concept |
+| v0.4 | statistical limits defined, two-layer model established |
+| v0.5 | formal TRP definition (target) |
+| v0.6 | hardware entropy integration (target) |
+| v1.0 | full specification with formal security model (target) |
+
+---
+
+## Closing Note
+
+*Traditional authentication asks: does this entity know the secret?*
+
+*IEPP asks: is this entity still on the same trajectory?*
+
+And now, v0.4 adds a third question:
+
+*How long has this entity been continuously itself?*
+
+Existence is not a binary state.
+It is accumulated, step by step,
+through a chain of responses that no replica can reproduce
+and no attacker can forge.
+
+Whether that accumulation constitutes identity —
+and who gets to decide —
+is the question we leave to you.
+
+---
+
+*IEPP Whitepaper v0.4*
+*Canonical Lineage and the Limits of Statistical Identity*
+*PCT filing pending. entropyproof.com*
