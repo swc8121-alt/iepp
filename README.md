@@ -1,284 +1,179 @@
-[README.md](https://github.com/user-attachments/files/26893455/README.md)
-# IEPP — Intrinsic Entropy Proof of Presence
+# IEPP — Individual Entity Proof Protocol
 
-A research proposal for continuity-based identity verification  
-for AI agents, avatars, robots, and digital entities.
+**Entropy-anchored execution-lineage continuity verification for AI agents and digital entities**
 
-> PCT patent application filed.  
-> Concept documentation in progress.  
-> Collaboration and feedback welcome.
+IEPP is an early-stage research protocol exploring how a verifier can determine whether an enrolled digital entity remains on an accepted execution lineage over time.
 
-IEPP explores a new approach to identity:
+> Identity is not structure. Identity is continuity.
 
-identity is not defined by static structure,  
-but by continuity of existence over time.
+Earlier project materials use the expansion **Intrinsic Entropy Proof of Presence**. Those documents are retained as part of the research history. The current protocol-level name is **Individual Entity Proof Protocol**.
 
----
+## Status
 
-Early-stage research repository for IEPP (Intrinsic Entropy Proof of Presence).
-Experimental code and evolving whitepapers are shared for transparency and discussion.
+- Research specification: v0.1 working draft
+- Experimental evidence: software-only simulations
+- Production readiness: not production ready
+- Formal security proof: not established
+- Patent status: PCT application filed
+- License: Apache-2.0
 
+## The problem
 
-## Whitepaper series
+AI agents, avatars, robots, and long-running software entities can be copied, snapshotted, rolled back, migrated, and forked. Static identifiers, keys, model weights, or architecture can authenticate a credential or structure, but they do not by themselves describe whether one execution remained the accepted continuation of an earlier execution.
 
-Concept evolution history:
+IEPP asks:
 
-| version | focus | link |
+> Is this entity presenting a valid continuation of its previously accepted execution lineage?
+
+## What IEPP does
+
+IEPP combines:
+
+1. a fresh verifier challenge;
+2. a commitment to evolving protected state;
+3. runtime entropy with a declared trust level;
+4. authenticated transition evidence;
+5. a canonical lineage registry and acceptance policy.
+
+The registry applies a single-successor rule: a candidate transition can advance the lineage only when its predecessor matches the current canonical commitment. Competing successors are treated as fork conflicts.
+
+## What IEPP does not claim
+
+IEPP does not by itself:
+
+- prove consciousness, personhood, intention, or legal identity;
+- determine a metaphysical “original” after cloning;
+- select a canonical branch without registry or governance policy;
+- replace signatures, FIDO-style authentication, TPM/TEE/PUF attestation, or provenance systems;
+- guarantee security after complete compromise of every trust anchor;
+- identify the canonical clone from output statistics alone.
+
+Runtime entropy helps independently executing forks diverge. **Entropy alone does not choose which branch is canonical.**
+
+## Architecture
+
+```text
+Governance / Policy
+  enrollment, canonical policy, migration, recovery, disputes
+                         |
+Application / Registry
+  canonical head, atomic successor acceptance, audit history
+                         |
+IEPP Protocol
+  challenge binding, state commitment, transition evidence
+                         |
+Platform Trust
+  software entropy -> OS/platform attestation -> TPM/TEE/PUF
+```
+
+## Repository guide
+
+| Area | Start here | Purpose |
 |---|---|---|
-| v0.1 | Concept introduction | https://entropyproof.com/ |
-| v0.2 | Experimental validation | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-2-experimental-validation/ |
-| v0.3 | Trajectory Continuity as Existence Verification | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-3/ |
-| v0.4 | Entropy Lineage & TRP Hardness | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-4/ |
-| v0.5 | Policy & Deployment Proposal for Trajectory-Based Identity | https://entropyproof.com/ai-existence-proof/iepp-whitepaper-v0-5/ |
+| Core protocol | [`docs/IEPP_Core_Specification_v0.1.md`](docs/IEPP_Core_Specification_v0.1.md) | Scope, roles, state machine, outcomes, security objectives |
+| Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
+| Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
+| Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
+| v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
+| v0.4 code | [`experiments/iepp_v04_autocorrelation.py`](experiments/iepp_v04_autocorrelation.py) | Autocorrelation clone-separation experiment |
+| Roadmap | [`ROADMAP.md`](ROADMAP.md) | Research and engineering milestones |
+| Contributing | [`CONTRIBUTING.md`](CONTRIBUTING.md) | Reproduction, review, and contribution expectations |
+| Security | [`SECURITY.md`](SECURITY.md) | Responsible reporting and current security boundary |
 
----
+## Current experimental evidence
 
-## What problem does IEPP try to solve?
+| Observation | Reported result | Correct interpretation |
+|---|---:|---|
+| Fork divergence | 100% in 100 runs | Forks diverged immediately in the tested simulation |
+| Simulated attacker success | 0 / 50,000 | No success under the implemented attacker models; not a proof |
+| Statistical original/fork separation | Not achieved | Statistics did not identify the canonical clone |
+| Canonical lineage separation | 100% / 0% in reported runs | Registry-relative lineage checking distinguished accepted and non-accepted branches |
+| Large uniqueness tests | 0 collisions in reported runs | Empirical collision observation, not a replacement for cryptographic bounds |
 
-As AI systems become autonomous, persistent, and replicable,  
-a fundamental question emerges:
+The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
-> How can we verify that a digital entity  
-> is the same entity over time?
+## Quick start
 
-Future systems may include:
+Requirements: Python 3.10 or later.
 
-- AI agents
-- autonomous software entities
-- digital avatars
-- physical AI systems (robots)
-- long-running AI services
-- digital assets with persistent identity
-
-These systems may be copied, forked, reinstantiated,  
-modified, simulated, or cloned.
-
-Traditional identity mechanisms rely on static attributes:  
-keys, signatures, model weights, architecture, stored identifiers.
-
-However, these properties can be duplicated.  
-**Copyable structure cannot reliably prove identity continuity.**
-
-IEPP investigates identity defined by continuity of trajectory.
-
----
-
-## Core concept
-
-IEPP models identity as continuity of state evolution.
-
-Each response is generated using intrinsic entropy  
-combined with previous state continuity.
-
-General representation:
-
-```
-R = H(E || C || T || S)
-
-E = intrinsic entropy
-C = external challenge
-T = time
-S = continuity state
+```bash
+python -m venv .venv
 ```
 
-Each response is linked to previous responses.  
-Identity emerges as trajectory continuity.
+Activate the environment:
 
----
+```bash
+# Linux/macOS
+source .venv/bin/activate
 
-## Security conjecture (TRP)
-
-**Trajectory Reconstruction Problem (TRP)** — conjecture:
-
-```
-Pr[T_clone^(k+1:n) ≡ T_canonical^(k+1:n) | T_1:k] ≤ ε(n−k)
+# Windows PowerShell
+.venv\Scripts\Activate.ps1
 ```
 
-Even with full knowledge of the prefix trajectory T_1:k,  
-no probabilistic polynomial-time adversary can reproduce  
-the canonical continuation with non-negligible probability.
+Install dependencies and run the experiments:
 
-Formal proof is an open problem and a primary research objective.
-
----
-
-## Experimental findings (so far)
-
-Experiments conducted in reproducible Google Colab environments.
-
-| metric | result |
-|---|---|
-| fork divergence rate | 100% (100 runs) |
-| immediate divergence after clone | 100% |
-| attacker success rate | 0.0% (50,000 attempts) |
-| clone statistical separation | not achieved |
-| canonical lineage separation | 100% / 0% (original / clone) |
-
-**Key finding:**  
-Statistical metrics successfully detect structural attackers.  
-Clone discrimination requires canonical lineage verification,  
-not statistical similarity measurement.
-
----
-
-## Three-layer verification structure
-
-```
-Layer 1 — Challenge binding
-  R_{n+1} = H(R_n || C_{n+1} || commitment(state_{n+1}))
-  → prevents replay and precomputation attacks
-
-Layer 2 — Commitment chain
-  commitment_n = H(state_n)
-  → structural integrity without exposing internal state
-
-Layer 3 — Statistical continuity
-  continuity_score from norm trajectory, entropy, autocorrelation
-  → anomaly detection for structural attackers
+```bash
+pip install -r requirements.txt
+python experiments/iepp_v03_merged.py
+python experiments/iepp_v04_autocorrelation.py
 ```
 
----
+The experiments use runtime entropy, so exact numeric values can vary. Claims should be based on aggregate results, declared configurations, and reproducible manifests.
 
-## Why continuity matters
+## Evidence levels
 
-Two systems may share identical structure,  
-yet follow different trajectories.
+| Level | Trust basis | Intended use |
+|---|---|---|
+| L1 Experimental | Software state, OS entropy, authenticated transcript | Research and low-risk tests |
+| L2 Platform-bound | Isolated key and platform attestation | Hosted agents |
+| L3 Hardware-backed | TPM/TEE plus rollback controls | High-value agents |
+| L4 Physical-bound | Hardware identity plus PUF or protected physical entropy | Robots and safety-critical systems |
 
-Even identical copies diverge immediately after forking.
+Existing public experiments are L1 unless explicitly stated otherwise.
 
-```
-original:  R_1 → R_2 → ... → R_k → R_{k+1} → R_{k+2} → ...
-clone:     R_1 → R_2 → ... → R_k → R'_{k+1} → R'_{k+2} → ...
-                                     ↑
-                               diverges here (immediately)
-```
+## Whitepaper history
 
-Identity becomes an observable property of continuity,  
-rather than a fixed structural attribute.
+The original root files are retained to preserve the evolution of the idea:
 
-> Existence is not a state. It is a lineage.
+| Version | Focus | Repository document |
+|---|---|---|
+| v0.3 | Trajectory continuity and three-layer verification | [`IEPP Whitepaper v0.3`](IEPP%20Whitepaper%20v0.3) |
+| v0.4 | Canonical lineage and limits of statistical identity | [`IEPP Whitepaper v0.4`](IEPP%20Whitepaper%20v0.4) |
+| v0.5 | Policy and deployment proposal | [`IEPP Whitepaper v0.5`](IEPP%20Whitepaper%20v0.5) |
+| Changelog | Research evolution | [`IEPP Changelog`](IEPP%20Changelog) |
+| Experiment notes | Original experiment guide | [`IEPP Experiments`](IEPP%20Experiments) |
 
----
+Website series: [entropyproof.com](https://entropyproof.com/)
 
-## Scope and layer boundaries
+## Open research questions
 
-IEPP defines the **measurement layer** only.
+- Can TRP be formalized as a useful security game with defensible hardness assumptions?
+- What minimum entropy profiles and health checks are required?
+- How should a canonical registry prevent or reveal equivocation and partitions?
+- How should authorized migration differ from unauthorized cloning?
+- Which security guarantees become possible with TPM, TEE, monotonic counters, or PUFs?
+- How can lineage evidence remain auditable without revealing sensitive internal state?
+- Can independent teams reproduce the reported results and break the proposed assumptions?
 
-```
-┌─────────────────────────────────────────┐
-│  Governance / Policy layer              │
-│  canonical selection, dispute resolution│
-│  → decided by users and institutions   │
-├─────────────────────────────────────────┤
-│  Application layer                      │
-│  branch management, canonical anchoring │
-│  → decided by platforms and services   │
-├─────────────────────────────────────────┤
-│  IEPP Protocol layer                    │
-│  continuity verification                │
-│  divergence detection                   │
-│  lineage auditability                   │
-└─────────────────────────────────────────┘
-```
+## Project discipline
 
-IEPP does not determine which trajectory is canonical.  
-IEPP provides the measurement.  
-The application decides what to do with it.
-
----
-
-## Potential applications
-
-- AI agent identity verification
-- persistent digital avatar identity
-- robot identity continuity verification
-- clone detection for AI systems
-- runtime integrity verification
-- tamper detection
-- continuity verification for long-running AI processes
-- identity persistence across system updates
-- digital asset originality tracking
-- synthetic content provenance
-
----
-
-## Code
-
-Experimental Colab notebooks:
-
-| notebook | description |
-|---|---|
-| `iepp_v03_merged.py` | Three-layer trajectory plausibility verifier |
-| `iepp_v04.py` | Autocorrelation-based clone detection experiment |
-
-All experiments are reproducible.  
-Results are documented in the whitepaper series.
-
----
-
-## Open problems
-
-- formal proof of TRP hardness
-- clone discrimination via trajectory statistics
-- minimum entropy source conditions
-- hardware entropy integration (TPM, PUF)
-- canonical lineage anchoring design
-- genesis registry architecture
-
----
-
-## Research status
-
-- concept stage with experimental validation
-- PCT patent application filed
-- open research questions remain
-- not production ready
-- collaboration and peer review welcome
-
----
-
-## Motivation
-
-As AI becomes easier to replicate,  
-identity verification becomes harder.
-
-Future digital ecosystems may require:
-
-- proof of originality
-- proof of continuity  
-- proof of non-cloning
-
-IEPP explores trajectory-based identity as a possible foundation.
-
----
-
-## Vision
-
-Identity should not depend only on structure.  
-Identity may emerge from continuity.
-
-Traditional authentication asks:  
-*does this entity know the secret?*
-
-IEPP asks:  
-*is this entity still on the same trajectory?*
-
-Whether continuity can serve as a verifiable,  
-forgery-resistant identity signal —  
-is the central open question this protocol explores.
-
----
+- Separate empirical evidence from formal proof.
+- Publish failed hypotheses and negative controls.
+- Identify the evidence level for every result.
+- Keep canonical selection and governance outside the measurement claim.
+- Treat TRP hardness as a conjecture until formally supported.
+- Do not expose credentials, raw entropy, private state, or patent-confidential material.
 
 ## Citation
 
-If you reference this work:
+Until a stable archival citation is assigned, cite:
 
+```text
+IEPP Authors. Individual Entity Proof Protocol (IEPP):
+Entropy-Anchored Execution-Lineage Continuity Verification.
+Research repository, 2026. https://github.com/swc8121-alt/iepp
 ```
-IEPP — Intrinsic Entropy Proof of Presence
-entropyproof.com
-PCT patent application filed.
-```
 
----
+## Collaboration
 
-*Feedback, criticism, and collaboration proposals are welcome.*
+Constructive criticism, independent reproduction, protocol review, and adversarial analysis are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`SECURITY.md`](SECURITY.md) before opening a public report.
