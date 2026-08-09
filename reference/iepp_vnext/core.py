@@ -1,4 +1,4 @@
-"""IEPP vNext private reference core."""
+"""IEPP v0.2 research reference core."""
 
 from __future__ import annotations
 
