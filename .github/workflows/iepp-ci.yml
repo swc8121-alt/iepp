@@ -2,7 +2,7 @@ name: IEPP CI
 
 on:
   push:
-    branches: [main, agent/iepp-core-foundation]
+    branches: [main, agent/iepp-core-foundation, agent/trp-2-security-games]
   pull_request:
     branches: [main]
 
@@ -39,3 +39,6 @@ jobs:
       - name: Run deterministic CI security gate
         working-directory: reference/iepp_vnext
         run: python ci_check.py
+
+      - name: Run TRP 2.0 security games
+        run: python -m reference.iepp_vnext.trp2_games
