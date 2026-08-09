@@ -4,11 +4,14 @@ This directory is the current technical source of truth. Root-level whitepapers 
 
 ## Current normative-direction drafts
 
-1. [`IEPP_Core_Specification_v0.1.md`](IEPP_Core_Specification_v0.1.md)  
-   Protocol scope, roles, state model, canonical acceptance, outcomes, evidence levels, and security objectives.
+1. [`IEPP_Core_Specification_v0.2.md`](IEPP_Core_Specification_v0.2.md)  
+   Executable protocol model, signed evidence, single-use challenges, canonical acceptance, audit, migration, and explicit limits.
 
 2. [`IEPP_Threat_Model_v0.1.md`](IEPP_Threat_Model_v0.1.md)  
    Trust assumptions, adversary classes, attack games, out-of-scope conditions, and reporting rules.
+
+3. [`IEPP_Core_Validation_v0.2.md`](IEPP_Core_Validation_v0.2.md)  
+   Reproduction commands, large-run results, performance measurements, and required negative findings.
 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
@@ -22,6 +25,7 @@ These are working drafts. They guide implementation and experiments but do not y
 | v0.4 | Can statistics distinguish an original from a clone? | Reported negative result: canonical registry is required |
 | v0.5 | How could policy and deployment use continuity evidence? | Governance and application policy must remain distinct from protocol measurement |
 | Core v0.1 | What exactly is verified? | Valid continuation of an anchored canonical execution lineage |
+| Core v0.2 | Can the controlling claim be executed and attacked? | Signed transitions and atomic canonical acceptance passed bounded L1 tests; trust-boundary failures remain explicit |
 
 ## Documentation rules
 

@@ -10,7 +10,7 @@ Earlier project materials use the expansion **Intrinsic Entropy Proof of Presenc
 
 ## Status
 
-- Research specification: v0.1 working draft
+- Research specification: v0.2 working draft
 - Experimental evidence: software-only simulations
 - Production readiness: not production ready
 - Formal security proof: not established
@@ -70,8 +70,10 @@ Platform Trust
 
 | Area | Start here | Purpose |
 |---|---|---|
-| Core protocol | [`docs/IEPP_Core_Specification_v0.1.md`](docs/IEPP_Core_Specification_v0.1.md) | Scope, roles, state machine, outcomes, security objectives |
+| Core protocol | [`docs/IEPP_Core_Specification_v0.2.md`](docs/IEPP_Core_Specification_v0.2.md) | Executable protocol model, acceptance order, evidence levels, explicit limits |
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
+| Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
+| Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -89,6 +91,9 @@ Platform Trust
 | Statistical original/fork separation | Not achieved | Statistics did not identify the canonical clone |
 | Canonical lineage separation | 100% / 0% in reported runs | Registry-relative lineage checking distinguished accepted and non-accepted branches |
 | Large uniqueness tests | 0 collisions in reported runs | Empirical collision observation, not a replacement for cryptographic bounds |
+| v0.2 valid transitions | 50,000 / 50,000 accepted | In-memory Ed25519 reference core under the declared L1 model |
+| v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
+| v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
@@ -116,6 +121,8 @@ Install dependencies and run the experiments:
 pip install -r requirements.txt
 python experiments/iepp_v03_merged.py
 python experiments/iepp_v04_autocorrelation.py
+python -m unittest discover -s reference/iepp_vnext/tests -v
+python reference/iepp_vnext/benchmark.py
 ```
 
 The experiments use runtime entropy, so exact numeric values can vary. Claims should be based on aggregate results, declared configurations, and reproducible manifests.

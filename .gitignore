@@ -12,3 +12,4 @@ build/
 results/*.csv
 results/*.json
 results/*.log
+!reference/iepp_vnext/results/*.json

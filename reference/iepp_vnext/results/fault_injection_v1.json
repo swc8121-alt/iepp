@@ -1,0 +1,20 @@
+{
+  "schema": "iepp-network-fault-injection-v1",
+  "steps": 2000,
+  "shuffled_delivery": {
+    "eventual_counter": 2000,
+    "buffered_retries": 1998,
+    "outcomes": {
+      "CONTINUITY_VALID": 2000,
+      "COUNTER_GAP": 1998
+    }
+  },
+  "duplicate_redelivery": {
+    "REPLAY_DETECTED": 2000
+  },
+  "expired_delay": [
+    false,
+    "CHALLENGE_EXPIRED"
+  ],
+  "note": "Application retry policy is distinct from protocol acceptance."
+}
