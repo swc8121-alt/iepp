@@ -1,0 +1,41 @@
+name: IEPP CI
+
+on:
+  push:
+    branches: [main, agent/iepp-core-foundation]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements.txt
+
+      - name: Compile reference implementation
+        run: python -m compileall -q reference/iepp_vnext
+
+      - name: Run unit and durability tests
+        run: python -m unittest discover -s reference/iepp_vnext/tests -v
+
+      - name: Run deterministic CI security gate
+        working-directory: reference/iepp_vnext
+        run: python ci_check.py
