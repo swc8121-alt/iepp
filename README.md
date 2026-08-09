@@ -11,9 +11,10 @@ Earlier project materials use the expansion **Intrinsic Entropy Proof of Presenc
 ## Status
 
 - Research specification: v0.2 working draft
+- TRP security model: 2.0 working draft
 - Experimental evidence: software-only simulations
 - Production readiness: not production ready
-- Formal security proof: not established
+- Formal security proof: not established; TRP hardness is a research conjecture
 - Patent status: PCT application filed
 - License: Apache-2.0
 
@@ -36,6 +37,14 @@ IEPP combines:
 5. a canonical lineage registry and acceptance policy.
 
 The registry applies a single-successor rule: a candidate transition can advance the lineage only when its predecessor matches the current canonical commitment. Competing successors are treated as fork conflicts.
+
+## TRP 2.0
+
+The **Trajectory Reconstruction Problem (TRP)** asks whether an adversary, given a canonical trajectory prefix and the information available under an explicit leakage model, can construct future evidence that is accepted as canonical without satisfying the authorized continuation conditions of the claimed evidence level.
+
+TRP 2.0 decomposes this question into continuation forgery, fork, rollback, replay, snapshot, entropy-degradation, registry-race, migration, and registry-equivocation games. It explicitly separates empirical divergence from protocol acceptance and from computational-hardness claims.
+
+**Current claim discipline:** finite attack experiments are empirical evidence only. IEPP does not currently claim a formal proof that TRP is computationally hard. See [`docs/TRP_2_Security_Model.md`](docs/TRP_2_Security_Model.md).
 
 ## What IEPP does not claim
 
@@ -71,9 +80,11 @@ Platform Trust
 | Area | Start here | Purpose |
 |---|---|---|
 | Core protocol | [`docs/IEPP_Core_Specification_v0.2.md`](docs/IEPP_Core_Specification_v0.2.md) | Executable protocol model, acceptance order, evidence levels, explicit limits |
+| TRP 2.0 | [`docs/TRP_2_Security_Model.md`](docs/TRP_2_Security_Model.md) | Formalized TRP definition, leakage profiles, security-game family, hardness conjecture |
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
 | Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
 | Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
+| TRP game harness | [`reference/iepp_vnext/trp2_games.py`](reference/iepp_vnext/trp2_games.py) | Deterministic replay, rollback, fork, substitution and unauthorized-key invariant tests |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -99,88 +110,12 @@ The most important negative result is preserved: statistical similarity metrics 
 
 ## Quick start
 
-Requirements: Python 3.10 or later.
+The current research implementation and validation material are under `reference/iepp_vnext/`. Run the repository CI workflow or the reference checks documented there. TRP 2.0 invariant checks can also be executed directly with:
 
 ```bash
-python -m venv .venv
+python -m reference.iepp_vnext.trp2_games
 ```
 
-Activate the environment:
+## Research principle
 
-```bash
-# Linux/macOS
-source .venv/bin/activate
-
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-```
-
-Install dependencies and run the experiments:
-
-```bash
-pip install -r requirements.txt
-python experiments/iepp_v03_merged.py
-python experiments/iepp_v04_autocorrelation.py
-python -m unittest discover -s reference/iepp_vnext/tests -v
-python reference/iepp_vnext/benchmark.py
-```
-
-The experiments use runtime entropy, so exact numeric values can vary. Claims should be based on aggregate results, declared configurations, and reproducible manifests.
-
-## Evidence levels
-
-| Level | Trust basis | Intended use |
-|---|---|---|
-| L1 Experimental | Software state, OS entropy, authenticated transcript | Research and low-risk tests |
-| L2 Platform-bound | Isolated key and platform attestation | Hosted agents |
-| L3 Hardware-backed | TPM/TEE plus rollback controls | High-value agents |
-| L4 Physical-bound | Hardware identity plus PUF or protected physical entropy | Robots and safety-critical systems |
-
-Existing public experiments are L1 unless explicitly stated otherwise.
-
-## Whitepaper history
-
-The original root files are retained to preserve the evolution of the idea:
-
-| Version | Focus | Repository document |
-|---|---|---|
-| v0.3 | Trajectory continuity and three-layer verification | [`IEPP Whitepaper v0.3`](IEPP%20Whitepaper%20v0.3) |
-| v0.4 | Canonical lineage and limits of statistical identity | [`IEPP Whitepaper v0.4`](IEPP%20Whitepaper%20v0.4) |
-| v0.5 | Policy and deployment proposal | [`IEPP Whitepaper v0.5`](IEPP%20Whitepaper%20v0.5) |
-| Changelog | Research evolution | [`IEPP Changelog`](IEPP%20Changelog) |
-| Experiment notes | Original experiment guide | [`IEPP Experiments`](IEPP%20Experiments) |
-
-Website series: [entropyproof.com](https://entropyproof.com/)
-
-## Open research questions
-
-- Can TRP be formalized as a useful security game with defensible hardness assumptions?
-- What minimum entropy profiles and health checks are required?
-- How should a canonical registry prevent or reveal equivocation and partitions?
-- How should authorized migration differ from unauthorized cloning?
-- Which security guarantees become possible with TPM, TEE, monotonic counters, or PUFs?
-- How can lineage evidence remain auditable without revealing sensitive internal state?
-- Can independent teams reproduce the reported results and break the proposed assumptions?
-
-## Project discipline
-
-- Separate empirical evidence from formal proof.
-- Publish failed hypotheses and negative controls.
-- Identify the evidence level for every result.
-- Keep canonical selection and governance outside the measurement claim.
-- Treat TRP hardness as a conjecture until formally supported.
-- Do not expose credentials, raw entropy, private state, or patent-confidential material.
-
-## Citation
-
-Until a stable archival citation is assigned, cite:
-
-```text
-IEPP Authors. Individual Entity Proof Protocol (IEPP):
-Entropy-Anchored Execution-Lineage Continuity Verification.
-Research repository, 2026. https://github.com/swc8121-alt/iepp
-```
-
-## Collaboration
-
-Constructive criticism, independent reproduction, protocol review, and adversarial analysis are welcome. Please read [`CONTRIBUTING.md`](CONTRIBUTING.md) and [`SECURITY.md`](SECURITY.md) before opening a public report.
+IEPP treats identity continuity as a layered security claim. A stronger evidence level requires stronger assumptions and stronger roots of trust. Claims must not exceed the deployed level.
