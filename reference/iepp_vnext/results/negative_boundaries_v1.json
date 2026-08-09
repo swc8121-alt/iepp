@@ -1,0 +1,40 @@
+{
+  "schema": "iepp-negative-security-boundaries-v1",
+  "predictable_entropy": {
+    "steps": 1000,
+    "accepted": 1000,
+    "conclusion": "Uniqueness/repetition checks do not prove unpredictability or source integrity."
+  },
+  "full_snapshot_compromise": {
+    "attacker_first": [
+      true,
+      "CONTINUITY_VALID"
+    ],
+    "legitimate_second": [
+      false,
+      "ROLLBACK_OR_LOSING_FORK"
+    ],
+    "conclusion": "With valid key and current state, first canonical acceptance wins."
+  },
+  "isolated_registry_split_view": {
+    "branch_acceptances": [
+      [
+        true,
+        "CONTINUITY_VALID"
+      ],
+      [
+        true,
+        "CONTINUITY_VALID"
+      ]
+    ],
+    "checkpoint_conflict_detected_after_comparison": true,
+    "conclusion": "Gossip, quorum or external anchoring is required for detection."
+  },
+  "registry_state_loss": {
+    "stale_branch_accepted_by_reinitialized_registry": [
+      true,
+      "CONTINUITY_VALID"
+    ],
+    "conclusion": "Durable atomic state and anchored recovery checkpoints are mandatory."
+  }
+}

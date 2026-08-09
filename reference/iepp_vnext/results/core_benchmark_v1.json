@@ -1,0 +1,29 @@
+{
+  "schema": "iepp-vnext-core-benchmark-v1",
+  "valid_chain": {
+    "steps": 50000,
+    "accepted": 50000,
+    "seconds": 8.264509,
+    "transitions_per_second": 6049.966,
+    "final_counter": 50000,
+    "audit_chain_valid": true
+  },
+  "attacks": {
+    "trials_each": 10000,
+    "outcomes": {
+      "REPLAY_DETECTED": 10000,
+      "ROLLBACK_OR_LOSING_FORK": 10000,
+      "SIGNATURE_INVALID": 10000
+    },
+    "continuity_false_accepts": 0,
+    "zero_false_accept_upper_95_per_attack": 0.0002995284
+  },
+  "fork_races": {
+    "races": 1000,
+    "accepted": 1000,
+    "rejected": 1000,
+    "double_accept": 0,
+    "double_accept_upper_95": 0.0029912495
+  },
+  "interpretation": "Finite empirical results are not a cryptographic proof; assumptions are defined in the core model."
+}

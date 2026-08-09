@@ -1,0 +1,39 @@
+{
+  "schema": "iepp-vnext-performance-v1",
+  "iterations": 10000,
+  "challenge_issue": {
+    "mean_ms": 0.002952,
+    "p50_ms": 0.002317,
+    "p95_ms": 0.003894,
+    "p99_ms": 0.006459
+  },
+  "prover_sign_transition": {
+    "mean_ms": 0.043517,
+    "p50_ms": 0.03819,
+    "p95_ms": 0.05381,
+    "p99_ms": 0.134756
+  },
+  "registry_verify_advance": {
+    "mean_ms": 0.118863,
+    "p50_ms": 0.103332,
+    "p95_ms": 0.154682,
+    "p99_ms": 0.318888
+  },
+  "checkpoint_sign": {
+    "mean_ms": 0.034418,
+    "p50_ms": 0.032629,
+    "p95_ms": 0.034891,
+    "p99_ms": 0.0869
+  },
+  "audit_verify": {
+    "events": 10000,
+    "valid": true,
+    "total_ms": 12.177976
+  },
+  "environment": {
+    "python": "3.12.13",
+    "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+    "cryptography": "46.0.0"
+  },
+  "warning": "In-memory single-process host measurement; excludes network and durable storage."
+}

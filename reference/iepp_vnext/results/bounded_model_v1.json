@@ -1,0 +1,10 @@
+{
+  "schema": "iepp-bounded-abstract-model-v1",
+  "depth": 7,
+  "challenge_count": 7,
+  "states_explored": 1063623,
+  "transitions_explored": 2319131,
+  "violations": [],
+  "all_invariants_hold": true,
+  "limitation": "Bounded executable model, not an unbounded formal proof or TLA+/ProVerif analysis."
+}
