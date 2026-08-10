@@ -1,0 +1,10 @@
+{
+  "trp_version": "2.0-v0.1",
+  "vectors": [
+    {"id": "T01", "profile": "A0", "attack": "exact_replay", "expected": "reject"},
+    {"id": "T03", "profile": "A1", "attack": "wrong_key_forgery", "expected": "reject"},
+    {"id": "T04", "profile": "A1", "attack": "stale_predecessor", "expected": "reject"},
+    {"id": "T05", "profile": "A3", "attack": "fork_race", "expected": "at_most_one_canonical"},
+    {"id": "T10", "profile": "A5", "attack": "key_plus_state_race", "expected": "boundary_success_possible_at_L1"}
+  ]
+}
