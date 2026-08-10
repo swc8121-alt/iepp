@@ -1,0 +1,22 @@
+name: TRP 2.0 Test Vectors
+
+on:
+  push:
+    branches: [main, "agent/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  vectors:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate vectors
+        working-directory: reference/iepp_vnext
+        run: python -m unittest -v test_trp2_vectors.py
