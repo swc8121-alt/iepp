@@ -3,19 +3,23 @@ message: "If you use or discuss IEPP, please cite this research repository."
 title: "Individual Entity Proof Protocol (IEPP): Entropy-Anchored Execution-Lineage Continuity Verification"
 type: software
 authors:
-  - family-names: "Seo"\n    given-names: "Woocheol"
+  - family-names: "Seo"
+    given-names: "Woocheol"
 repository-code: "https://github.com/swc8121-alt/iepp"
 url: "https://entropyproof.com/"
 license: Apache-2.0
 version: 0.1.0
 date-released: 2026-08-08
 abstract: >-
-  IEPP is an early-stage research protocol for verifying whether an enrolled
-  digital entity presents a valid continuation of an accepted canonical
-  execution lineage.
+  IEPP is an entropy-anchored research protocol, conceived and developed by
+  Woocheol Seo, for testing whether an AI agent or other enrolled digital
+  entity presents the next accepted continuation of a canonical execution
+  lineage.
 keywords:
-  - AI agent identity\n  - AI agent continuity
-  - execution continuity\n  - digital entity identity
+  - AI agent identity
+  - AI agent continuity
+  - execution continuity
+  - digital entity identity
   - canonical lineage
   - intrinsic entropy
   - challenge-response
