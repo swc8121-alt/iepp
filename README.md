@@ -189,18 +189,18 @@ Until a stable archival citation is assigned, cite:
 Seo, Woocheol. Individual Entity Proof Protocol (IEPP):
 Entropy-Anchored Execution-Lineage Continuity Verification.
 Research repository, 2026. https://github.com/swc8121-alt/iepp
-\`\`\`
+```
 
 BibTeX:
 
-\`\`\`bibtex
+```bibtex
 @software{seo_iepp_2026,
   author = {Woocheol Seo},
   title = {Individual Entity Proof Protocol (IEPP): Entropy-Anchored Execution-Lineage Continuity Verification},
   year = {2026},
   url = {https://github.com/swc8121-alt/iepp}
 }
-\`\`\`
+```
 
 ## Collaboration
 
