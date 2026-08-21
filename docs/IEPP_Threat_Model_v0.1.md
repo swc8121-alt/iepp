@@ -32,14 +32,14 @@ Every evaluation must declare which assumptions hold:
 
 | Adversary | Capability | Required result | Current status |
 |---|---|---|---|
-| Network | Observe, delay, reorder, replay, substitute | Reject replay and substitution | Partially tested |
-| Software clone | Copy application and visible configuration | Cannot silently advance canonical lineage | Partially tested |
-| Snapshot | Copy VM memory and disk at step `t` | At most one successor accepted; conflict recorded | Real VM test required |
-| Rollback | Restore an older prover state | Reject stale predecessor | Formal test required |
-| Entropy | Bias, repeat, suppress, or predict entropy | Detect degradation or bound the claim | Minimum profile undefined |
+| Network | Observe, delay, reorder, replay, substitute | Reject replay and substitution | Core/bounded tests passed; deployed network untested |
+| Software clone | Copy application and visible configuration | Cannot silently advance canonical lineage | Keyless/stale clones rejected; key+state theft is an L1 failure boundary |
+| Snapshot | Copy VM memory and disk at step `t` | At most one successor accepted; conflict recorded | Logical race tested; hypervisor snapshot/restore untested |
+| Rollback | Restore an older prover state | Reject stale predecessor | Core stale-counter/head tests passed; whole-DB rollback remains locally undetectable |
+| Entropy | Bias, repeat, suppress, or predict entropy | Detect degradation or bound the claim | Unapproved/repeated source tested; broader health and downgrade policy open |
 | Host administrator | Inspect or modify process, RNG, clock, storage | Security limited by declared level | Not defended at L1 |
-| Registry | Rewrite, race, or equivocate canonical state | Detect via append-only log, quorum, or anchor | Design required |
-| Verifier | Reuse or maliciously choose challenges | Domain, freshness, and audit controls | Design required |
+| Registry | Rewrite, race, or equivocate canonical state | Detect via append-only log, quorum, or anchor | Single-DB transaction tested; split-view controls open |
+| Verifier | Reuse or maliciously choose challenges | Domain, freshness, and audit controls | One-time/expiry/domain binding implemented; malicious-verifier bias open |
 | Physical | Control device and physical entropy path | Hardware-dependent boundary | Future work |
 
 ## 5. Attack games
@@ -48,7 +48,8 @@ Every evaluation must declare which assumptions hold:
 
 The adversary observes valid evidence for challenge `C1`, then presents it for a fresh challenge `C2` or after the original transition was accepted. Success means the verifier returns `CONTINUITY_VALID`.
 
-Expected result: `CHALLENGE_INVALID` or `REPLAY_DETECTED`.
+Expected result: `CHALLENGE_UNKNOWN`, `CHALLENGE_BINDING_INVALID`, `REPLAY_DETECTED`, or
+`ALREADY_COMMITTED` for an exact idempotent retry. `ALREADY_COMMITTED` never advances state again.
 
 ### 5.2 Rollback
 
@@ -56,13 +57,13 @@ After the registry accepts commitment `S[t]`, the adversary restores a prover to
 
 Success means the CLR replaces `S[t]` using evidence whose predecessor is not the current canonical commitment.
 
-Expected result: `STALE_CANONICAL_STATE` or `ROLLBACK_DETECTED`.
+Expected result: `STALE_CANONICAL_STATE` or `ROLLBACK_OR_LOSING_FORK`.
 
 ### 5.3 Fork race
 
 Two provers begin from the same accepted commitment and produce different successors. Success means both successors are accepted as canonical under the same single-successor policy and registry view.
 
-Expected result: exactly one accepted successor; the other is `LINEAGE_FORKED`.
+Expected result: exactly one `CONTINUITY_VALID`; the other is `ROLLBACK_OR_LOSING_FORK` or a transaction conflict.
 
 ### 5.4 Challenge substitution
 
