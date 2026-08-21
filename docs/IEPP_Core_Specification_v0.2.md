@@ -1,4 +1,4 @@
-# IEPP Core Specification v0.2 — Research Working Draft
+# IEPP Core Specification v0.2.1 — Research Working Draft
 
 Status: research draft; not production ready  
 Scope: anchored execution-lineage continuity verification
@@ -42,7 +42,10 @@ The registry accepts only when all conditions hold:
 7. predecessor equals the current canonical head;
 8. declared entropy source is allowed and the commitment is not an immediate repeat;
 9. state transition recomputation matches;
-10. challenge consumption and canonical-head update complete atomically.
+10. challenge consumption, evidence insertion, audit append, canonical-head update, and audit-root update complete atomically.
+
+An exact retry of evidence that has already committed returns `ALREADY_COMMITTED` without advancing state again.
+This is an idempotent confirmation, not a second canonical acceptance and not an attack success.
 
 ## 4. Canonical fork policy
 
@@ -80,4 +83,20 @@ Claims must not exceed the deployed level.
 - Full theft of current state and signing key allows an attacker to race as the entity.
 - Loss or rollback of registry state can reauthorize an old branch.
 - Two isolated registry replicas can accept different branches until checkpoints are compared.
-- This in-memory reference is not durable or production ready.
+- The full in-memory `AtomicRegistry` remains available for bounded protocol tests. The v0.2.1
+  `DurableRegistry` integrates challenge consumption, evidence uniqueness, canonical-head advancement, entropy-health
+  recording, and the global audit root in one SQLite WAL/FULL transaction. It is a single-host research profile, not
+  a production or distributed registry. A separate `SQLiteCanonicalStore` remains a lower-level CAS test component.
+- An internally consistent rollback of the entire SQLite database cannot be detected locally. External checkpoints,
+  transparency, a quorum, or a protected monotonic anchor are required.
+
+## 9. Durable result semantics
+
+- `CONTINUITY_VALID`: this request committed one new canonical transition.
+- `ALREADY_COMMITTED`: the identical evidence ID committed previously; no state change occurred on this retry.
+- `REPLAY_DETECTED`: an already-consumed context was reused without matching a prior committed evidence ID.
+- `ROLLBACK_OR_LOSING_FORK`: the candidate is older than, or lost a race against, the current canonical lineage.
+
+Canonical decisions and entropy health are reported separately. v0.2.1 directly identifies only an allowed source
+profile, immediate repetition, and source substitution. Predictability, bias, truncation, and physical origin require
+versioned health profiles and stronger evidence, deferred to v0.3.
