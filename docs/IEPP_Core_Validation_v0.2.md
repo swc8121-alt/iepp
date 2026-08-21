@@ -1,4 +1,4 @@
-# IEPP Core Validation v0.2
+# IEPP Core Validation v0.2.1
 
 Status: reproducible L1 software experiment; not a production security claim  
 Date: 2026-08-09
@@ -47,6 +47,7 @@ python reference/iepp_vnext/performance.py
 | Bounded abstract states explored | 1,063,623 |
 | Bounded abstract transitions explored | 2,319,131 |
 | Bounded invariant violations | 0 |
+| Integrated durable-registry fault cases | F00–F12 deterministic coverage passed |
 
 With zero observed false accepts in 10,000 trials, the finite-sample 95% upper bound is approximately 0.02995% per
 tested attack class. With zero double accepts in 1,000 races, the corresponding upper bound is approximately 0.2991%.
@@ -66,7 +67,7 @@ Measured on the recorded single-process Linux host with an in-memory registry:
 The 50,000-step end-to-end loop processed about 6,050 transitions per second. Network, consensus, durable database,
 and hardware-attestation latency are excluded.
 
-## Durable canonical-head component
+## Durable registry evidence
 
 The SQLite WAL/FULL-synchronous compare-and-swap component passed:
 
@@ -75,6 +76,13 @@ The SQLite WAL/FULL-synchronous compare-and-swap component passed:
 - rollback of both evidence and head changes after an injected pre-update failure.
 
 It is a tested storage component, not yet a complete production registry integration.
+
+The v0.2.1 `DurableRegistry` additionally places challenge consumption, evidence insertion, canonical-head and
+entropy-health updates, the audit event, and the global audit root inside one `BEGIN IMMEDIATE` transaction. Its
+deterministic F00–F12 suite covers every pre-commit boundary, commit-response loss with `ALREADY_COMMITTED`, a
+two-connection race, checkpoint regeneration, the required negative result for an internally consistent old
+snapshot, and fail-closed handling of database corruption. High-repetition multiprocess kill and physical storage
+fault campaigns remain open and must not be inferred from these deterministic tests.
 
 ## Required negative results
 
@@ -112,7 +120,7 @@ This v0.2 implementation and its results are L1 unless a test explicitly states 
 
 ## Remaining work
 
-- integrate cryptographic verification and durable storage in one crash-consistent transaction boundary;
+- run high-repetition multiprocess termination and storage-fault campaigns against the integrated transaction;
 - implement and test multi-registry checkpoint gossip/quorum;
 - inject process crashes, disk faults, packet loss, partitions, and recovery events;
 - define TPM/TEE/PUF evidence profiles;
