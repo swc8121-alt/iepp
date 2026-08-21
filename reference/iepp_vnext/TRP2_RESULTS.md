@@ -23,4 +23,8 @@ For the bounded model, the expected baseline is:
 
 The final row is intentionally a **negative/boundary control**. It prevents the benchmark from turning an L1 limitation into an unsupported claim. If the attacker possesses current signing authority and current state, the bounded software model permits the attacker to win a canonical race. Stronger claims require stronger evidence levels and assumptions.
 
-These numbers are invariant checks in a bounded executable model, not empirical proof that every implementation or deployment is secure. Real VM snapshots, concurrency, durable registry behavior, entropy degradation, attestation, split-view registries and physical evidence require separate evaluation.
+These numbers are invariant checks in a bounded executable model, not empirical proof that every implementation or
+deployment is secure. Separate actual-core tests cover in-memory concurrency. SQLite component tests cover durable
+CAS behavior, and the v0.2.1 integrated registry has deterministic F00–F12 transaction tests. High-repetition
+multiprocess termination, real VM snapshots, storage-device faults, entropy degradation, attestation, split-view
+registries, and physical evidence still require separate evaluation.
