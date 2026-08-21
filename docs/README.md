@@ -25,7 +25,7 @@ These are working drafts. They guide implementation and experiments but do not y
 | v0.4 | Can statistics distinguish an original from a clone? | Reported negative result: canonical registry is required |
 | v0.5 | How could policy and deployment use continuity evidence? | Governance and application policy must remain distinct from protocol measurement |
 | Core v0.1 | What exactly is verified? | Valid continuation of an anchored canonical execution lineage |
-| Core v0.2 | Can the controlling claim be executed and attacked? | Signed transitions and atomic canonical acceptance passed bounded L1 tests; trust-boundary failures remain explicit |
+| Core v0.2.1 | Can the controlling claim survive durable local faults? | Signed transitions and integrated SQLite acceptance have deterministic F00–F12 coverage; distributed and hardware boundaries remain explicit |
 
 ## Documentation rules
 
@@ -42,6 +42,6 @@ These are working drafts. They guide implementation and experiments but do not y
 - canonical registry consistency profile;
 - entropy source and health-test profile;
 - migration and recovery profile;
-- reproducible test-vector package;
+- expanded interoperability vectors for independent implementations;
 - TPM/TEE integration profile;
 - privacy and selective-disclosure analysis.
