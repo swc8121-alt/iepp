@@ -22,10 +22,16 @@ key_plus_state_boundary_accept_rate=1
 
 The final expected value is a deliberate boundary control for L1.
 
+## Additional component evidence
+
+- actual `iepp_vnext` integration covers replay, rollback, substitution, and fork race;
+- `SQLiteCanonicalStore` covers restart, two-writer CAS, and injected pre-commit rollback;
+- v0.2.1 `DurableRegistry` gives deterministic F00–F12 coverage for the integrated single-host transaction.
+
 ## Not yet claimed as validated
 
 - real VM/process snapshot behavior;
-- real concurrent durable-registry crash consistency;
+- high-repetition multiprocess kill/crash budgets and storage-device faults;
 - entropy-source quality or unpredictability;
 - TEE/TPM/secure-element resistance;
 - L3 checkpoint gossip/quorum split-view detection;
