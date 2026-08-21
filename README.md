@@ -83,7 +83,7 @@ Platform Trust
 | Core protocol | [`docs/IEPP_Core_Specification_v0.2.md`](docs/IEPP_Core_Specification_v0.2.md) | Executable protocol model, acceptance order, evidence levels, explicit limits |
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
 | Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
-| Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
+| Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, and integrated durable-registry tests |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -104,6 +104,7 @@ Platform Trust
 | v0.2 valid transitions | 50,000 / 50,000 accepted | In-memory Ed25519 reference core under the declared L1 model |
 | v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
+| v0.2.1 durable fault matrix | F00–F12 deterministic cases passed | Single-host SQLite transaction result; not distributed consensus or rollback-proof storage |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
@@ -142,9 +143,9 @@ The experiments use runtime entropy, so exact numeric values can vary. Claims sh
 | Level | Trust basis | Intended use |
 |---|---|---|
 | L1 Experimental | Software state, OS entropy, authenticated transcript | Research and low-risk tests |
-| L2 Platform-bound | Isolated key and platform attestation | Hosted agents |
-| L3 Hardware-backed | TPM/TEE plus rollback controls | High-value agents |
-| L4 Physical-bound | Hardware identity plus PUF or protected physical entropy | Robots and safety-critical systems |
+| L2 Protected runtime | Isolated key/state plus TPM/TEE/secure-element platform attestation | Hosted and device-bound agents |
+| L3 Witnessed registry | Quorum, transparency gossip, or external anchoring | Split-view/equivocation detection |
+| L4 Physical binding | Evaluated hardware identity plus PUF or protected physical entropy | Robots and safety-critical systems |
 
 Existing public experiments are L1 unless explicitly stated otherwise.
 
@@ -164,7 +165,7 @@ Website series: [entropyproof.com](https://entropyproof.com/)
 
 ## Open research questions
 
-- Can TRP be formalized as a useful security game with defensible hardness assumptions?
+- Can the TRP 2.0 game be connected to a formal reduction and composable guarantees under defensible assumptions?
 - What minimum entropy profiles and health checks are required?
 - How should a canonical registry prevent or reveal equivocation and partitions?
 - How should authorized migration differ from unauthorized cloning?
