@@ -1,8 +1,10 @@
 # TRP 2.0 Status
 
-Status date: 2026-08-10
+Status date: 2026-08-21
 
-## Implemented on this branch
+## Merged and implemented
+
+TRP 2.0 was merged into `main` by PR #5 on 2026-08-14.
 
 - canonical-continuation security-game definition;
 - explicit attacker view and A0–A6 hierarchy;
@@ -13,11 +15,18 @@ Status date: 2026-08-10
 - regression tests, metrics helpers and baseline vectors;
 - dependency-free self-test and GitHub Actions definitions;
 - formalization and follow-on experiment roadmaps.
+- actual vNext integration vectors for replay, rollback, substitution and fork races;
+- SQLite CAS restart, concurrent-successor and pre-commit rollback tests;
+- v0.2.1 integrated SQLite transaction and deterministic F00–F12 fault-matrix coverage.
 
 ## Validation status
 
-The repository contains executable checks and CI definitions, but this status document does not claim that remote GitHub Actions have completed successfully until workflow-run evidence is available. The bounded model is intentionally distinct from the real `iepp_vnext` implementation and from real VM/concurrency/hardware experiments.
+The bounded model, actual in-memory core, lower-level durable CAS, and integrated durable registry are distinct test
+targets. Local suites pass for the committed configurations. This document does not claim remote Actions success
+without workflow-run evidence, distributed safety, hypervisor-level snapshot resistance, or hardware assurance.
 
 ## Promotion gate
 
-Before merging TRP 2.0 into the main public narrative, recommended gates are: remote CI success; direct integration tests against the actual vNext APIs; concurrent fork/crash-consistency testing; and reproducible snapshot testing. Stronger L2/L3/L4 claims require their corresponding mechanisms and experiments.
+The original PR #5 merge gates for bounded checks, actual-core integration, single-registry concurrency, and claim
+language are complete. Remaining research promotion gates are reproducible VM snapshot/restore, high-repetition
+process-crash and storage-fault runs, entropy fault/downgrade profiles, L3 gossip/quorum, and L2/L4 hardware tests.
