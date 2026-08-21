@@ -1,15 +1,22 @@
 # TRP 2.0 Merge Gate
 
-TRP 2.0 should be promoted from the working branch when all of the following are satisfied:
+TRP 2.0 was merged by PR #5 on 2026-08-14. The checklist now separates completed merge evidence from open research promotion work.
 
-- [ ] aggregate bounded self-test passes in remote CI;
-- [ ] baseline vectors/profile/metrics tests pass;
-- [ ] actual `iepp_vnext` integration tests cover replay, rollback and fork race;
-- [ ] concurrency test reports zero dual canonical acceptance for the tested registry implementation;
-- [ ] crash/restart test confirms no stale reauthorization in the tested durable store;
-- [ ] snapshot experiment is reproducible and reports divergence separately from canonical acceptance;
-- [ ] README/whitepaper language follows `TRP_2_Claim_Language.md`;
-- [ ] no statement upgrades empirical evidence into an unconditional TRP hardness theorem;
-- [ ] L2/L3/L4 claims, if any, have corresponding mechanisms and tests.
+- [x] aggregate bounded self-test passes locally;
+- [x] baseline vectors/profile/metrics tests pass;
+- [x] actual `iepp_vnext` integration tests cover replay, rollback and fork race;
+- [x] tested in-memory registry and SQLite components report zero dual canonical acceptance;
+- [x] pre-commit failures roll back in the tested integrated SQLite registry;
+- [x] README/whitepaper language follows `TRP_2_Claim_Language.md`;
+- [x] no statement upgrades empirical evidence into an unconditional TRP hardness theorem;
+
+## Open research promotion gates
+
+- [ ] confirm remote GitHub Actions runs and preserve run URLs;
+- [ ] run the F02–F09 matrix at the declared high-repetition and multiprocess budgets;
+- [ ] reproduce real VM/hypervisor snapshot and restore behavior;
+- [ ] complete entropy freeze/bias/substitution/unavailable policy tests;
+- [ ] test L3 checkpoint gossip/quorum under partitions;
+- [ ] support every L2/L4 claim with its corresponding mechanism and hardware test.
 
 Failure of a gate should narrow the claim or remain documented as open work rather than being hidden.
