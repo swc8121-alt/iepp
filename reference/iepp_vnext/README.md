@@ -15,6 +15,8 @@ Implemented primitives:
 - replay, rollback, losing-fork and substitution rejection;
 - append-only hash-chained audit events and signed checkpoints;
 - authorized key migration and split-view checkpoint detection.
+- integrated SQLite challenge/evidence/head/audit transaction with idempotent retry;
+- deterministic F00–F12 durable fault-matrix coverage.
 
 IEPP proves only the protocol claim under its trust assumptions. It does not
 prove consciousness, personhood, metaphysical identity, or which exact clone
@@ -23,10 +25,10 @@ is the “original” without canonical registry policy.
 ## Run the validation
 
 ```bash
-python -m unittest discover -s iepp_lab/tests -v
-python iepp_lab/benchmark.py --valid-steps 50000 --attack-trials 10000 --fork-races 1000
-python iepp_lab/negative_boundaries.py --predictable-steps 1000
-python iepp_lab/performance.py --iterations 10000
+python -m unittest discover -s reference/iepp_vnext/tests -v
+python reference/iepp_vnext/benchmark.py --valid-steps 50000 --attack-trials 10000 --fork-races 1000
+python reference/iepp_vnext/negative_boundaries.py --predictable-steps 1000
+python reference/iepp_vnext/performance.py --iterations 10000
 ```
 
 See `PRIVATE_CORE_VALIDATION_REPORT_KO.md` for measured results and required negative findings.
