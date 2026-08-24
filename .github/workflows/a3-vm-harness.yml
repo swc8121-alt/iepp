@@ -19,4 +19,4 @@ jobs:
           python-version: "3.12"
       - name: Run A3 harness tests
         working-directory: reference/iepp_vnext
-        run: python -m unittest -v tests.test_a3_vm_runner
+        run: python -m unittest discover -s tests -p 'test_a3_vm_runner.py' -v
