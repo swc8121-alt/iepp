@@ -20,7 +20,7 @@ Earlier project materials use the expansion **Intrinsic Entropy Proof of Presenc
 
 ## Status
 
-- Research specification: v0.2 working draft
+- Research specification: v0.2.1 working draft
 - Experimental evidence: software-only simulations
 - Production readiness: not production ready
 - Formal security proof: not established
