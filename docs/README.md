@@ -13,6 +13,9 @@ This directory is the current technical source of truth. Root-level whitepapers 
 3. [`IEPP_Core_Validation_v0.2.md`](IEPP_Core_Validation_v0.2.md)  
    Reproduction commands, large-run results, performance measurements, and required negative findings.
 
+4. [`IEPP_Public_Evidence_Boundary_v0.2.1.md`](IEPP_Public_Evidence_Boundary_v0.2.1.md)
+   Public claim boundary, supplemental durability observations, and deliberately non-public operational material.
+
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
 ## Historical sequence
@@ -25,7 +28,7 @@ These are working drafts. They guide implementation and experiments but do not y
 | v0.4 | Can statistics distinguish an original from a clone? | Reported negative result: canonical registry is required |
 | v0.5 | How could policy and deployment use continuity evidence? | Governance and application policy must remain distinct from protocol measurement |
 | Core v0.1 | What exactly is verified? | Valid continuation of an anchored canonical execution lineage |
-| Core v0.2 | Can the controlling claim be executed and attacked? | Signed transitions and atomic canonical acceptance passed bounded L1 tests; trust-boundary failures remain explicit |
+| Core v0.2.1 | Can verification, durable acceptance, and retry outcomes be stated consistently? | Acceptance requires a confirmed canonical commit; bounded durability observations and rollback limits remain explicit |
 
 ## Documentation rules
 

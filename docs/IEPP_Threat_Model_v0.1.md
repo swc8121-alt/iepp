@@ -32,10 +32,10 @@ Every evaluation must declare which assumptions hold:
 
 | Adversary | Capability | Required result | Current status |
 |---|---|---|---|
-| Network | Observe, delay, reorder, replay, substitute | Reject replay and substitution | Partially tested |
-| Software clone | Copy application and visible configuration | Cannot silently advance canonical lineage | Partially tested |
-| Snapshot | Copy VM memory and disk at step `t` | At most one successor accepted; conflict recorded | Real VM test required |
-| Rollback | Restore an older prover state | Reject stale predecessor | Formal test required |
+| Network | Observe, delay, reorder, replay, substitute | Reject replay and substitution | Bounded L1 tests completed |
+| Software clone | Copy application and visible configuration | Cannot silently advance canonical lineage | Bounded single-registry tests completed |
+| Snapshot | Copy VM memory and disk at step `t` | At most one successor accepted; conflict recorded | Simulated storage cases completed; real VM test required |
+| Rollback | Restore prover or registry state | Reject stale predecessor; expose whole-store rollback externally | In-memory and storage-component tests completed; full-store rollback not locally detected |
 | Entropy | Bias, repeat, suppress, or predict entropy | Detect degradation or bound the claim | Minimum profile undefined |
 | Host administrator | Inspect or modify process, RNG, clock, storage | Security limited by declared level | Not defended at L1 |
 | Registry | Rewrite, race, or equivocate canonical state | Detect via append-only log, quorum, or anchor | Design required |
@@ -57,6 +57,10 @@ After the registry accepts commitment `S[t]`, the adversary restores a prover to
 Success means the CLR replaces `S[t]` using evidence whose predecessor is not the current canonical commitment.
 
 Expected result: `STALE_CANONICAL_STATE` or `ROLLBACK_DETECTED`.
+
+An internally consistent rollback of the entire registry is a distinct case: local checks may see a valid older
+state. Detection then requires a witnessed checkpoint, transparency log, quorum, or external anchor and is an L3
+claim, not an L1 local-registry claim.
 
 ### 5.3 Fork race
 
@@ -109,3 +113,6 @@ Experimental reports must include:
 - distinction between empirical attack failure and a security proof.
 
 The existing statistical clone-separation failure is a required negative result: output-distribution similarity did not identify the canonical clone. Canonical lineage verification, not statistical resemblance, is the governing mechanism for fork acceptance.
+
+For durable implementations, reports must also distinguish `CONTINUITY_ACCEPTED`, `ALREADY_COMMITTED`, and
+`OUTCOME_UNKNOWN`. A successful evidence check without a confirmed canonical commit is not an accepted transition.

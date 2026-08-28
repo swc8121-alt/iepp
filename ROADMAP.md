@@ -25,13 +25,16 @@ Exit criterion: an independent reviewer can implement the attack games without p
 
 ## M3 — Reproducible reference implementation
 
-Status: Planned
+Status: In progress
 
 - prover, verifier, and canonical registry reference components;
 - explicit message formats and versioning;
 - deterministic test vectors plus runtime-entropy profiles;
 - automated replay, rollback, and fork tests;
 - machine-readable result manifests.
+
+Current evidence: an L1 in-memory core, durable compare-and-swap component, machine-readable manifests, and bounded
+F00-F12 single-host observations exist. Full crash-consistent integration and independent reproduction remain open.
 
 Exit criterion: clean installation and repeatable tests on at least two independent environments.
 
@@ -56,7 +59,8 @@ Status: Planned
 - evaluate monotonic or rollback-resistant storage;
 - measure latency, throughput, storage, recovery, and failure modes.
 
-Exit criterion: one independently reproducible L3 prototype.
+Exit criterion: one independently reproducible L2 protected-runtime prototype. L3 additionally requires witnessed
+registry evidence such as quorum, transparency gossip, or external anchoring.
 
 ## M6 — Paper revision and external review
 

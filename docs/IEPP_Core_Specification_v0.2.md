@@ -1,4 +1,4 @@
-# IEPP Core Specification v0.2 — Research Working Draft
+# IEPP Core Specification v0.2.1 — Research Working Draft
 
 Status: research draft; not production ready  
 Scope: anchored execution-lineage continuity verification
@@ -29,7 +29,7 @@ S[t] = H(
 The prover signs all transition fields using the enrolled Ed25519 key. Length-prefixed domain-separated encoding is
 used to avoid concatenation ambiguity.
 
-## 3. Acceptance order
+## 3. Acceptance order and outcome semantics
 
 The registry accepts only when all conditions hold:
 
@@ -42,7 +42,17 @@ The registry accepts only when all conditions hold:
 7. predecessor equals the current canonical head;
 8. declared entropy source is allowed and the commitment is not an immediate repeat;
 9. state transition recomputation matches;
-10. challenge consumption and canonical-head update complete atomically.
+10. challenge consumption, evidence recording, canonical-head/counter update, and audit-event recording complete
+    within the implementation's declared atomicity boundary.
+
+Evidence verification alone is not acceptance. `CONTINUITY_ACCEPTED` means that both verification and the canonical
+state advance committed. If the implementation cannot determine whether the commit occurred, it must fail closed
+with `OUTCOME_UNKNOWN`; it must not infer success from prior verification.
+
+An exact retry of the same evidence identifier and transition body may return `ALREADY_COMMITTED` when the earlier
+commit is confirmed. This confirms the prior acceptance and does not advance state a second time. Reuse of an
+evidence identifier with a different body is a conflict and must be rejected. Storage schema, write ordering, and
+recovery authority are implementation and operational concerns outside this public Core.
 
 ## 4. Canonical fork policy
 
@@ -80,4 +90,5 @@ Claims must not exceed the deployed level.
 - Full theft of current state and signing key allows an attacker to race as the entity.
 - Loss or rollback of registry state can reauthorize an old branch.
 - Two isolated registry replicas can accept different branches until checkpoints are compared.
-- This in-memory reference is not durable or production ready.
+- The public L1 core is in memory. Separate SQLite durability observations are supplemental component evidence, not
+  evidence of a fully integrated production registry.

@@ -1,7 +1,7 @@
 # IEPP Core Validation v0.2
 
 Status: reproducible L1 software experiment; not a production security claim  
-Date: 2026-08-09
+Date: 2026-08-28
 
 ## Controlling result
 
@@ -66,7 +66,7 @@ Measured on the recorded single-process Linux host with an in-memory registry:
 The 50,000-step end-to-end loop processed about 6,050 transitions per second. Network, consensus, durable database,
 and hardware-attestation latency are excluded.
 
-## Durable canonical-head component
+## Durable canonical-head component and supplemental prototype
 
 The SQLite WAL/FULL-synchronous compare-and-swap component passed:
 
@@ -75,6 +75,12 @@ The SQLite WAL/FULL-synchronous compare-and-swap component passed:
 - rollback of both evidence and head changes after an injected pre-update failure.
 
 It is a tested storage component, not yet a complete production registry integration.
+
+A separate single-host SQLite research prototype also completed deterministic F00-F12 cases for pre-commit faults,
+commit-response loss and exact retry, two-writer successor races, restart checkpoint validation, corruption handling,
+and internally consistent old-snapshot restoration. The observed retry result confirms an earlier commit without a
+second state advance; it does not turn replay into a new acceptance. Exact schema, write order, and recovery policy
+remain outside the public L1 claim.
 
 ## Required negative results
 
@@ -112,7 +118,9 @@ This v0.2 implementation and its results are L1 unless a test explicitly states 
 
 ## Remaining work
 
-- integrate cryptographic verification and durable storage in one crash-consistent transaction boundary;
+- publish an independently reviewable integration profile for cryptographic verification and durable storage without
+  exposing deployment credentials or operational recovery controls;
+- execute real process-kill, filesystem, disk-fault, and VirtualBox snapshot/restore tests;
 - implement and test multi-registry checkpoint gossip/quorum;
 - inject process crashes, disk faults, packet loss, partitions, and recovery events;
 - define TPM/TEE/PUF evidence profiles;
