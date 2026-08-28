@@ -35,7 +35,10 @@ Please include:
 - TRP hardness is a conjecture, not a proven security assumption.
 - Existing experiments are primarily software-only L1 simulations.
 - Statistical clone separation was not achieved in the reported original/fork tests.
-- Canonical registry consistency, hardware rollback resistance, and malicious-host defense remain open work.
+- A single-host SQLite component and deterministic F00-F12 prototype cases are supplemental evidence only; real VM,
+  filesystem, disk-fault, distributed-registry, and malicious-host validation remain open work.
+- An internally consistent rollback of the whole registry is not locally detectable without an L3 witness, quorum,
+  transparency log, or external anchor.
 - A finite experiment with zero observed attacks does not establish cryptographic security.
 
 Reports that clarify these boundaries are welcome and will be preserved in the research record.
