@@ -2,6 +2,8 @@
 
 This directory is the current technical source of truth. Root-level whitepapers remain available as historical research records.
 
+Readers encountering IEPP for the first time should begin with [`IEPP_Research_Evolution.md`](IEPP_Research_Evolution.md). It identifies which early hypotheses were supported, which failed, and how the current registry-relative canonical-continuation question emerged.
+
 ## Current normative-direction drafts
 
 1. [`IEPP_Core_Specification_v0.2.md`](IEPP_Core_Specification_v0.2.md)  
@@ -19,6 +21,8 @@ This directory is the current technical source of truth. Root-level whitepapers 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
 ## Historical sequence
+
+This table is a navigation aid rather than a ladder of increasingly proven claims. In particular, the v0.4 statistical result was negative and caused a change in the governing mechanism.
 
 | Stage | Central question | Current interpretation |
 |---|---|---|

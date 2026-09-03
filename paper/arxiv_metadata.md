@@ -18,7 +18,7 @@ cs.AI (Artificial Intelligence)
 
 ## Comments
 
-8 pages, 3 tables. Public reference implementation and reproducibility artifacts are available at https://github.com/seo-woocheol/IEPP.
+10 pages, 4 tables. Includes the evidence-led evolution from preliminary entropy and statistical hypotheses to registry-relative canonical continuation. Public reference implementation and reproducibility artifacts are available at https://github.com/swc8121-alt/iepp.
 
 ## Abstract
 
