@@ -50,6 +50,38 @@ This paper makes four contributions:
 
 We do \emph{not} claim consciousness, personhood, legal identity, physical uniqueness, a general reduction proving TRP hardness, or production readiness. We also do not claim that randomness or behavioral statistics reveal the canonical copy.
 
+\section{Reader's Guide to IEPP}
+\subsection{A minimal example}
+Suppose one agent finishes work yesterday and is copied into two processes today. Both copies may have the same name, model, memory, and signing key, so ordinary login and signature verification can accept both. IEPP does not ask which process is the metaphysically ``real original.'' It asks a narrower, operational question: relative to a verifier's acceptance record, which candidate validly advances the previously accepted state?
+
+At each step, the verifier issues a challenge that can be used only once. A candidate binds that challenge, the previously accepted state, the next sequence number, and declared current-execution evidence into a signed transition. The registry checks the evidence and atomically records at most one successor. A later copy may still produce a valid signature, but its challenge has been consumed or its predecessor is stale, so it is not accepted as the canonical successor.
+
+\subsection{Core terms}
+In this paper, \emph{canonical} means the one branch accepted under an explicit policy and registry view; it does not mean an objective or philosophical original. The \emph{registry} is a verification service that stores the current accepted head, counter, consumed challenges, and audit information. A \emph{transition} is the signed evidence submitted to move from one accepted state to the next. A \emph{commitment} is a hash that binds a value without necessarily disclosing it; a commitment alone does not certify that the value is truthful or high quality. \emph{Entropy} is variable runtime input from an allowed source. IEPP binds declared entropy into a transition, but does not claim that entropy alone proves identity or originality. A \emph{fork} consists of competing candidates derived from the same predecessor.
+
+\subsection{Notation and fixed labels}
+The strings \texttt{IEPP-Entropy-v1} and \texttt{IEPP-State-vNext-1} below are fixed ASCII protocol labels, not mathematical variables. They provide domain separation so hashes created for different purposes or protocol versions cannot be silently interchanged. The latter label is retained for compatibility with the current public reference implementation.
+
+\begin{table}[ht]
+\centering\small
+\caption{Core notation.}
+\begin{tabular}{p{0.18\textwidth}p{0.70\textwidth}}\toprule
+Symbol & Meaning\\\midrule
+$id$ & enrolled agent or entity identifier\\
+$t$ & monotonically increasing transition number\\
+$H_t$ & registry's current canonical head at step $t$\\
+$S_t$ & state commitment at step $t$\\
+$E_t,EC_t$ & raw runtime entropy and its commitment\\
+$cid_t,nonce_t,expiry_t$ & challenge identifier, one-time nonce, and expiry\\
+$R_t,A_t$ & optional runtime-state and platform-attestation commitments\\
+$\Hash$ & cryptographic hash function, SHA-256 in the reference profile\\
+$\parallel$ & length-prefixed, order-preserving concatenation\\
+$\Accept$ & registry decision after all policy checks succeed\\\bottomrule
+\end{tabular}
+\end{table}
+
+IEPP's conclusion is registry- and policy-relative. An isolated registry split or compromise of both the current key and state exceeds the present L1 guarantee. Stating these failure conditions is part of the threat model, rather than an exception hidden from the reader.
+
 \section{Problem and System Model}
 \subsection{Canonical histories}
 For an enrolled entity identifier $id$, let the accepted history through step $t$ be
