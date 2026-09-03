@@ -62,7 +62,7 @@ At each step, the verifier issues a challenge that can be used only once. A cand
 In this paper, \emph{canonical} means the one branch accepted under an explicit policy and registry view; it does not mean an objective or philosophical original. The \emph{registry} is a verification service that stores the current accepted head, counter, consumed challenges, and audit information. A \emph{transition} is the signed evidence submitted to move from one accepted state to the next. A \emph{commitment} is a hash that binds a value without necessarily disclosing it; a commitment alone does not certify that the value is truthful or high quality. \emph{Entropy} is variable runtime input from an allowed source. IEPP binds declared entropy into a transition, but does not claim that entropy alone proves identity or originality. A \emph{fork} consists of competing candidates derived from the same predecessor.
 
 \subsection{Notation and domain separation}
-Table~1 summarizes the notation used in the protocol definition. The strings \texttt{IEPP-Entropy-v1} and \texttt{IEPP-State-vNext-1} are fixed ASCII protocol labels rather than mathematical variables. They provide domain separation so hashes created for different purposes or protocol versions cannot be silently interchanged. The latter is retained for compatibility with the current public reference implementation and is a constant input to the computation.
+Table~1 summarizes the notation used in the protocol definition. This specification defines two public domain-separation labels: $D_E$ is the ASCII byte sequence represented literally by \texttt{IEPP-Entropy-v1}, and $D_S$ is the ASCII byte sequence represented literally by \texttt{IEPP-State-vNext-1}. They are neither variables nor values obtained from an earlier document, deployment, or secret configuration; an implementation inserts these exact bytes as hash inputs. Using distinct labels prevents an entropy commitment from being interpreted as a state commitment and prevents values from different protocol versions from being silently interchanged. The \texttt{vNext-1} spelling is retained only for compatibility with the current public reference implementation.
 
 \begin{table}[ht]
 \centering\small
@@ -76,6 +76,7 @@ $S_t$ & state commitment at step $t$\\
 $E_t,EC_t$ & raw runtime entropy and its commitment\\
 $cid_t,nonce_t,expiry_t$ & challenge identifier, one-time nonce, and expiry\\
 $R_t,A_t$ & optional runtime-state and platform-attestation commitments\\
+$D_E,D_S$ & literal public labels \texttt{IEPP-Entropy-v1} and \texttt{IEPP-State-vNext-1}\\
 $\Hash$ & cryptographic hash function, SHA-256 in the reference profile\\
 $\parallel$ & length-prefixed, order-preserving concatenation\\
 $\Accept$ & registry decision after all policy checks succeed\\\bottomrule
@@ -123,14 +124,14 @@ Every \iepp{} claim depends on explicit assumptions:
 \subsection{Enrollment and entropy commitment}
 Enrollment records $(id,domain,key\_id,pk,S_0,policy)$. Raw runtime entropy $E_t$ is not disclosed. The prover instead computes
 \begin{equation}
-  EC_t=\Hash(\texttt{IEPP-Entropy-v1}\parallel E_t).
+  EC_t=\Hash(D_E\parallel E_t).
 \end{equation}
 This commitment can hide the sampled bytes under the hash assumption and permit equality tests. It does not prove unpredictability, physical origin, or source integrity.
 
 \subsection{Authenticated transition}
-For a fresh challenge $(cid_t,nonce_t,expiry_t)$ and monotonic counter $t$, let $D=\texttt{IEPP-State-vNext-1}$ and let $R_t$ and $A_t$ denote the optional runtime and attestation commitments. The prover computes
+For a fresh challenge $(cid_t,nonce_t,expiry_t)$ and monotonic counter $t$, let $R_t$ and $A_t$ denote the optional runtime and attestation commitments. The prover computes
 \begin{align}
-S_t=\Hash(&D\parallel id\parallel domain\parallel t\parallel S_{t-1}\nonumber\\
+  S_t=\Hash(&D_S\parallel id\parallel domain\parallel t\parallel S_{t-1}\nonumber\\
 &\parallel cid_t\parallel nonce_t\parallel EC_t\parallel source_t\nonumber\\
 &\parallel R_t\parallel A_t).
 \end{align}
