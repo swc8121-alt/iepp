@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[margin=0.9in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,array,microtype,url,hyperref}
+\usepackage{amsmath,amssymb,booktabs,array,microtype,url,hyperref,tikz}
+\usetikzlibrary{arrows.meta,positioning}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \hypersetup{
@@ -8,7 +9,7 @@
   linkcolor=black,
   citecolor=blue,
   urlcolor=blue,
-  pdftitle={IEPP: Entropy-Anchored Canonical Continuation for Copyable AI Agents},
+  pdftitle={IEPP: Policy-Relative Canonical Continuation for Copyable AI Agents},
   pdfauthor={Woocheol Seo},
   pdfsubject={Registry-relative execution-lineage verification for copyable AI agents},
   pdfkeywords={AI agents, canonical continuation, execution lineage, rollback, fork, protocol security}
@@ -18,7 +19,7 @@
 \newcommand{\Hash}{\mathsf{H}}
 \newcommand{\Accept}{\mathsf{Accept}}
 
-\title{IEPP: Entropy-Anchored Canonical Continuation\\for Copyable AI Agents}
+\title{IEPP: Policy-Relative Canonical Continuation\\for Copyable AI Agents}
 \author{Woocheol Seo\\Independent Researcher\\\texttt{iepp.protocol@gmail.com}\\\url{https://entropyproof.com}}
 \date{September 2026}
 
@@ -26,7 +27,7 @@
 \maketitle
 
 \begin{abstract}
-Long-running AI agents can be copied, snapshotted, rolled back, migrated, and forked. A static identifier or signing key authenticates a credential holder, but does not show that one execution is the accepted continuation of a previously observed execution. We call this the \emph{canonical-continuation problem} and present the Individual Entity Proof Protocol (\iepp), an early-stage protocol for registry-relative execution-lineage verification. \iepp{} binds a fresh challenge, monotonic counter, current canonical commitment, declared-entropy commitment, optional runtime and attestation commitments, and enrolled signing key into authenticated transition evidence. An atomic registry accepts at most one successor of a canonical head. We refine the Trajectory Reconstruction Problem as TRP~2.0, a capability-indexed Canonical Continuation Game spanning observation, copying, state leakage, snapshots, entropy influence, key-plus-state compromise, and registry or platform compromise. In a public Python implementation, 50,000 of 50,000 valid transitions were accepted; no false acceptance was observed in 10,000 trials each of replay, rollback/losing-fork, and signed-field substitution; no double acceptance was observed in 1,000 fork races; and bounded exploration covered 1,063,623 states and 2,319,131 transitions without invariant violation. Single-host durability tests covered F00--F12 fault points. Negative controls show that entropy commitments do not certify unpredictability, a clone with the current key and state can win an L1 race, isolated registries can split, and output statistics do not identify an original. The evidence supports a narrow L1 single-registry software claim, not metaphysical identity, entropy quality, distributed safety, production readiness, or security after complete compromise.
+Long-running AI agents can be copied, snapshotted, rolled back, migrated, and forked. A static identifier or signing key authenticates a credential holder, but does not show that one execution is the accepted continuation of a previously observed execution. We call this the \emph{canonical-continuation problem} and present the Individual Entity Proof Protocol (\iepp), an early-stage protocol for registry-relative execution-lineage verification. \iepp{} binds a fresh challenge, monotonic counter, current canonical commitment, declared evidence, and enrolled signing key into an authenticated transition. An atomic registry accepts at most one successor of a canonical head. TRP~2.0 is a capability-indexed Canonical Continuation Game spanning observation through key-plus-state and registry compromise. A public L1 implementation accepted 50,000 valid transitions and recorded no false accepts in 10,000 trials each of replay, rollback/losing-fork, and signed-field substitution, no double accepts in 1,000 fork races, and no invariant violation in a bounded exploration of 1,063,623 states and 2,319,131 transitions. An ablation that removed both entropy fields likewise recorded no replay false accept in 10,000 trials and no double accept in 1,000 races, confirming that canonical serialization comes from freshness, predecessor agreement, and atomic head update rather than entropy. A declared entropy commitment remains a policy and audit hook; it does not certify unpredictability. Current-key-plus-state compromise and isolated registries remain explicit failure boundaries. The evidence supports only a narrow L1 single-registry software claim.
 \end{abstract}
 
 \section{Introduction}
@@ -43,7 +44,7 @@ We present the Individual Entity Proof Protocol (\iepp), a protocol for verifyin
 This paper makes four contributions:
 \begin{itemize}
   \item it separates credential authentication, empirical branch divergence, and policy-relative canonical continuation;
-  \item it specifies a domain-separated transition construction with challenge freshness, predecessor binding, monotonic counters, entropy commitments, and atomic single-successor acceptance;
+  \item it specifies a domain-separated transition construction with challenge freshness, predecessor binding, monotonic counters, declared evidence hooks, and atomic single-successor acceptance;
   \item it defines TRP~2.0 as a capability-indexed Canonical Continuation Game, including explicit boundaries where L1 software protection fails; and
   \item it reports reproducible positive results together with negative controls and a bounded single-host durability study.
 \end{itemize}
@@ -58,11 +59,28 @@ IEPP does not attempt to determine metaphysical originality among copies. Its op
 
 At each step, the verifier issues a challenge that can be used only once. A candidate binds the challenge, previously accepted state, next sequence number, and declared current-execution evidence into a signed transition. The registry verifies predecessor consistency, challenge freshness, sequence, signature, and policy conditions, then atomically records at most one successor. A later copy may still produce a cryptographically valid signature, but a consumed challenge or stale predecessor prevents its acceptance as the canonical successor.
 
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=6mm and 8mm,>=Latex,every node/.style={font=\small},box/.style={draw,rounded corners,align=center,inner sep=5pt}]
+\node[box] (head) {accepted head\\$H_t$};
+\node[box,below left=of head] (a) {copy A\\valid key/state};
+\node[box,below right=of head] (b) {copy B\\valid key/state};
+\node[box,below=16mm of head] (reg) {atomic registry\\compare-and-swap};
+\node[box,below=of reg] (next) {one accepted successor\\$H_{t+1}$};
+\draw[->] (head) -- (a); \draw[->] (head) -- (b);
+\draw[->] (a) -- (reg);
+\draw[->] (b) -- (reg);
+\draw[->] (reg) -- (next);
+\end{tikzpicture}
+\caption{Credential validity does not select a branch. Under one consistent registry view, the atomic head update accepts at most one successor; the other candidate becomes stale.}
+\label{fig:fork}
+\end{figure}
+
 \subsection{Operational semantics and core concepts}
 In this paper, \emph{canonical} means the one branch accepted under an explicit policy and registry view; it does not mean an objective or philosophical original. The \emph{registry} is a verification service that stores the current accepted head, counter, consumed challenges, and audit information. A \emph{transition} is the signed evidence submitted to move from one accepted state to the next. A \emph{commitment} is a hash that binds a value without necessarily disclosing it; a commitment alone does not certify that the value is truthful or high quality. \emph{Entropy} is variable runtime input from an allowed source. IEPP binds declared entropy into a transition, but does not claim that entropy alone proves identity or originality. A \emph{fork} consists of competing candidates derived from the same predecessor.
 
 \subsection{Notation and domain separation}
-Table~1 summarizes the notation used in the protocol definition. This specification defines two public domain-separation labels: $D_E$ is the ASCII byte sequence represented literally by \texttt{IEPP-Entropy-v1}, and $D_S$ is the ASCII byte sequence represented literally by \texttt{IEPP-State-vNext-1}. They are neither variables nor values obtained from an earlier document, deployment, or secret configuration; an implementation inserts these exact bytes as hash inputs. Using distinct labels prevents an entropy commitment from being interpreted as a state commitment and prevents values from different protocol versions from being silently interchanged. The \texttt{vNext-1} spelling is retained only for compatibility with the current public reference implementation.
+Table~1 summarizes the notation used in the protocol definition. This specification defines three public domain-separation labels: $D_E$ is the literal ASCII byte sequence \texttt{IEPP-Entropy-v1}, $D_S$ is \texttt{IEPP-State-vNext-1}, and $D_X$ is \texttt{IEPP-Evidence-vNext-1}. They are neither variables nor values obtained from an earlier document, deployment, or secret configuration; an implementation inserts these exact bytes as hash inputs. Distinct labels prevent values created for different purposes from being silently interchanged. The \texttt{vNext-1} spellings are retained for compatibility with the evaluated public implementation; changing them would define a new wire profile and invalidate existing test vectors.
 
 \begin{table}[ht]
 \centering\small
@@ -74,14 +92,24 @@ $t$ & monotonically increasing transition number\\
 $H_t$ & registry's current canonical head at step $t$\\
 $S_t$ & state commitment at step $t$\\
 $E_t,EC_t$ & raw runtime entropy and its commitment\\
+$source_t$ & declared entropy-source label checked by policy\\
 $cid_t,nonce_t,expiry_t$ & challenge identifier, one-time nonce, and expiry\\
 $R_t,A_t$ & optional runtime-state and platform-attestation commitments\\
-$D_E,D_S$ & literal public labels \texttt{IEPP-Entropy-v1} and \texttt{IEPP-State-vNext-1}\\
+$X_t,\sigma_t$ & transition-evidence body and its signature\\
+$D_E,D_S,D_X$ & literal public domain-separation labels defined above\\
+$key\_id,pk$ & enrolled signing-key identifier and public key\\
 $\Hash$ & cryptographic hash function, SHA-256 in the reference profile\\
 $\parallel$ & length-prefixed, order-preserving concatenation\\
 $\Accept$ & registry decision after all policy checks succeed\\\bottomrule
 \end{tabular}
 \end{table}
+
+For byte strings $x_1,\ldots,x_n$, the reference encoder computes
+\begin{equation}
+\Hash_D(x_1,\ldots,x_n)=\mathrm{SHA256}(\mathrm{u32}(|D|)\parallel D\parallel
+\mathrm{u64}(|x_1|)\parallel x_1\parallel\cdots\parallel\mathrm{u64}(|x_n|)\parallel x_n),
+\end{equation}
+where integer lengths are unsigned big-endian values. Empty optional fields have length zero. This definition removes concatenation ambiguity; alternative profiles may use another injective canonical encoding if the profile identifier changes.
 
 IEPP's conclusion is registry- and policy-relative. An isolated registry split or compromise of both the current key and state exceeds the present L1 guarantee. Stating these failure conditions is part of the threat model, rather than an exception hidden from the reader.
 
@@ -124,18 +152,43 @@ Every \iepp{} claim depends on explicit assumptions:
 \subsection{Enrollment and entropy commitment}
 Enrollment records $(id,domain,key\_id,pk,S_0,policy)$. Raw runtime entropy $E_t$ is not disclosed. The prover instead computes
 \begin{equation}
-  EC_t=\Hash(D_E\parallel E_t).
+  EC_t=\Hash_{D_E}(E_t).
 \end{equation}
 This commitment can hide the sampled bytes under the hash assumption and permit equality tests. It does not prove unpredictability, physical origin, or source integrity.
 
 \subsection{Authenticated transition}
 For a fresh challenge $(cid_t,nonce_t,expiry_t)$ and monotonic counter $t$, let $R_t$ and $A_t$ denote the optional runtime and attestation commitments. The prover computes
 \begin{align}
-  S_t=\Hash(&D_S\parallel id\parallel domain\parallel t\parallel S_{t-1}\nonumber\\
-&\parallel cid_t\parallel nonce_t\parallel EC_t\parallel source_t\nonumber\\
-&\parallel R_t\parallel A_t).
+  S_t=\Hash_{D_S}(&id,domain,t,S_{t-1},cid_t,nonce_t,\nonumber\\
+                  &EC_t,source_t,R_t,A_t).
 \end{align}
-All fields use length-prefixed canonical encoding and domain separation. The prover signs the complete evidence body with the enrolled Ed25519 key. SHA-256 and Ed25519 are reference-profile choices, not essential to the state-machine semantics.
+The complete transition body and signature are
+\begin{align}
+X_t={}&(protocol,id,domain,t,S_{t-1},S_t,cid_t,nonce_t,expiry_t,\nonumber\\
+      &EC_t,source_t,R_t,A_t,key\_id),\\
+B_t={}&\Hash_{D_X}(X_t),\qquad \sigma_t=\mathrm{Sign}_{sk}(B_t).
+\end{align}
+Here $\Hash_{D_X}(X_t)$ means that the ordered fields of $X_t$ are encoded separately by the canonical encoder above, not that an ambiguous textual tuple is hashed. SHA-256 and Ed25519 are reference-profile choices, not essential to the state-machine semantics.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[node distance=5mm and 7mm,>=Latex,every node/.style={font=\small},box/.style={draw,rounded corners,align=center,inner sep=4pt}]
+\node[box] (challenge) {fresh challenge\\$cid_t,nonce_t,expiry_t$};
+\node[box,right=of challenge] (build) {bind predecessor, counter,\\declared evidence and key};
+\node[box,right=of build] (signed) {signed transition\\$(X_t,\sigma_t)$};
+\node[box,below=of build] (checks) {verify signature, challenge,\\counter, predecessor and policy};
+\node[box,below=of checks] (cas) {atomically consume challenge\\and replace canonical head};
+\draw[->] (challenge) -- (build); \draw[->] (build) -- (signed);
+\draw[->] (signed) |- (checks); \draw[->] (checks) -- (cas);
+\end{tikzpicture}
+\caption{Transition construction and registry decision path. Entropy is a declared evidence hook; single-successor selection occurs at the final atomic update.}
+\label{fig:transition}
+\end{figure}
+
+\subsection{Procedures}
+\paragraph{ProveTransition.} Given the enrolled secret key, current head, fresh entity-bound challenge, declared evidence, and optional commitments, the prover (1) checks challenge addressing and expiry, (2) computes $EC_t$ and $S_t$, (3) constructs $X_t$ with counter $t$, (4) signs $B_t$, and (5) returns $(X_t,\sigma_t)$. Raw $E_t$ is retained unless an audit policy later requires opening the commitment.
+
+\paragraph{VerifyAndAdvance.} The registry parses $X_t$ and requires protocol, entity, domain, and key identifiers to match enrollment. It verifies $\sigma_t$; challenge ownership, nonce, expiry, and non-consumption; $t=H_{t-1}.t+1$; $S_{t-1}=H_{t-1}.S$; policy constraints; and recomputed $S_t$. In one compare-and-swap transaction it aborts if the stored head changed, otherwise consumes the challenge, writes $H_t$, and appends the evidence to the audit chain. Any failed precondition rejects without advancing the head.
 
 \subsection{Acceptance rule}
 The registry verifies enrollment; protocol, domain, and key identifiers; signature coverage; evidence uniqueness; challenge ownership, nonce, expiry, and single use; exact counter increment; predecessor equality with the current canonical head; allowed entropy-source declaration and immediate-repeat policy; and transition recomputation. It then atomically consumes the challenge and advances the head.
@@ -189,7 +242,15 @@ Required properties include replay resistance, predecessor continuity, fork seri
 
 \section{Implementation and Evaluation}
 \subsection{Reference profile}
-The public Python implementation uses SHA-256, Ed25519, entity- and domain-bound one-time challenges, monotonic counters, authenticated evidence, an atomic in-memory registry, signed checkpoints, dual-signature migration, and a SQLite WAL/FULL-synchronous compare-and-swap store. The artifact includes test vectors, bounded games, negative controls, and reproduction commands. All reported results are L1 software evidence.
+The public Python implementation uses SHA-256, Ed25519, entity- and domain-bound one-time challenges, monotonic counters, authenticated evidence, an atomic in-memory registry, signed checkpoints, dual-signature migration, and a SQLite WAL/FULL-synchronous compare-and-swap store. The evaluated \texttt{reference/iepp\_vnext} artifact is pinned by the following Git tree:
+\begin{center}\small\ttfamily d6cd7f7f4b48c6a2a020ae3a240041b306b779ed\end{center}
+From that directory, the principal reproduction commands are:
+\begin{quote}\small\ttfamily
+python run\_trp2\_ci.py\\
+python -m unittest discover -s tests -v\\
+python entropy\_ablation.py
+\end{quote}
+All reported results are L1 software evidence.
 
 \subsection{Research questions and metrics}
 We test whether valid sequential transitions are accepted; replay, stale-predecessor, rollback, signed-field substitution, and losing forks are rejected; concurrent successors are serialized; durable state survives tested restart and injected-fault cases; and the bounded model preserves Eq.~\ref{eq:single-successor}. The primary metric is unauthorized canonical acceptance. First divergence and output similarity are diagnostics, not security proofs.
@@ -234,6 +295,24 @@ Four negative results define the actual boundary:
   \item \textbf{Statistical clone-separation failure.} Historical experiments produced original--fork score gaps of 0.015 and $-0.047$, which did not identify a canonical clone. Registry-relative acceptance therefore replaces statistical resemblance as the decision mechanism.
 \end{enumerate}
 
+\subsection{Entropy-field ablation}
+To isolate the source of canonical serialization, we evaluated a comparison variant that removes both $EC_t$ and $source_t$ while retaining the registered key, one-time challenge, predecessor, monotonic counter, signature, and atomic head update. Table~\ref{tab:ablation} shows that the tested replay and concurrent-fork outcomes were unchanged. This does not make entropy useless: a declared commitment can support later equality checks, source policy, audit, and stronger platform profiles. It does establish that entropy is not the L1 mechanism that chooses the canonical successor.
+
+\begin{table}[t]
+\centering
+\caption{Entropy-field ablation. Results are bounded observations, not universal probability claims.}
+\label{tab:ablation}
+\small
+\begin{tabular}{p{0.27\textwidth}p{0.27\textwidth}p{0.27\textwidth}}
+\toprule
+Variant & Replay trials & Concurrent fork races\\
+\midrule
+Full L1 profile & 0 false accepts / 10,000 & 0 double accepts / 1,000\\
+No entropy fields & 0 false accepts / 10,000 & 0 double accepts / 1,000\\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Evidence Levels}
 \begin{table}[t]
 \centering
@@ -260,7 +339,7 @@ FP-Agent shows that browser and behavioral features can classify browsing agents
 
 Proof-of-Continuity studies causal, non-expansive propagation of authority across execution steps~\cite{gallo2026continuity}. Its authorization-chain question is complementary to \iepp{}'s canonical-successor question. W3C DIDs and Verifiable Credentials define interoperable identifiers and tamper-evident claims~\cite{w3cdid,w3cvc}. C2PA binds provenance assertions to content assets~\cite{c2pa}. \iepp{} instead concerns a continuing executor, although an IEPP checkpoint could be carried in a credential or provenance assertion.
 
-Remote attestation, protected monotonic state, append-only transparency logs, and Byzantine fault tolerance address adjacent trust boundaries. \iepp{} deliberately does not reimplement these systems. Its contribution is the explicit composition point among authenticated transition evidence, evolving state, canonical acceptance, and evidence-level claims.
+Remote attestation provides an architecture for conveying and appraising evidence about an attester's operating state~\cite{rfc9334}; TPM~2.0 supplies protected platform primitives that can support stronger profiles~\cite{tcgtpm}; Certificate Transparency illustrates publicly auditable append-only logging and split-view concerns~\cite{rfc9162}; and Raft illustrates consensus over a replicated log~\cite{ongaro2014raft}. \iepp{} deliberately does not reimplement attestation, hardware roots, transparency, or consensus. Its contribution is the explicit composition point among authenticated transition evidence, evolving state, canonical acceptance, and evidence-level claims. Accordingly, Eq.~\ref{eq:single-successor} is a single-registry invariant, not a distributed-consensus result.
 
 \section{Limitations and Open Research}
 The present study is software-only and authored by the protocol proposer. It lacks independent reproduction, peer review, unbounded formal verification, and real adversarial deployment. Conventional hash and signature assumptions are used, but no reduction proves a general TRP-hardness theorem. Eq.~\ref{eq:single-successor} is scoped to one consistent registry view and does not survive partition without a witnessed-registry mechanism. Current state plus signing-key compromise wins at L1. Entropy-health policy remains incomplete, and an entropy commitment is not attestation. Privacy leakage from repeated lineage checkpoints has not been analyzed.

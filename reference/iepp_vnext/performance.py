@@ -64,7 +64,7 @@ def run(iterations: int = 10_000) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--iterations", type=int, default=10_000)
-    parser.add_argument("--output", type=Path, default=Path("iepp_lab/results/performance_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/performance_v1.json"))
     args = parser.parse_args()
     result = run(args.iterations)
     args.output.parent.mkdir(parents=True, exist_ok=True)

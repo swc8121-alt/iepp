@@ -21,6 +21,8 @@ All notable changes to this research project are documented here.
 - authenticated predecessor-bound transitions and atomic single-successor acceptance implemented
 - predictable-entropy, key-plus-state, registry-split, and statistical-separation negative controls made mandatory
 - L1 single-registry evidence boundary and F00-F12 single-host durability limits documented
+- entropy-field ablation confirmed that tested L1 serialization comes from freshness, predecessor agreement, signatures, and atomic head update rather than entropy
+- public title, citation metadata, README, and manuscript aligned to policy-relative canonical continuation
 - arXiv manuscript and reproducibility package prepared for independent review
 
 ---

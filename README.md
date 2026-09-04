@@ -1,20 +1,20 @@
 # IEPP — Individual Entity Proof Protocol
 
-**Entropy-anchored execution-lineage continuity verification for AI agents and digital entities**
+**Policy-relative canonical continuation for copyable AI agents and digital entities**
 
 IEPP is an early-stage research protocol exploring how a verifier can determine whether an enrolled digital entity remains on an accepted execution lineage over time.
 
-> Identity is not structure. Identity is continuity.
+> Credential authenticity is not execution continuity.
 
 **Conceived and developed by [Woocheol Seo](https://entropyproof.com/), independent researcher.**
 
 Canonical one-sentence description:
 
-> IEPP is an entropy-anchored protocol for testing whether an AI agent or other digital entity presents the next accepted continuation of a previously enrolled execution lineage.
+> IEPP is a registry-relative protocol for testing whether an AI agent or other digital entity presents the next policy-authorized continuation of a previously accepted execution lineage.
 
 Canonical attribution:
 
-> Individual Entity Proof Protocol (IEPP), conceived and developed by Woocheol Seo. The foundational entropy-based challenge-response mechanism is subject to prior patent filings; the canonical-continuation framework and TRP 2.0 are released as open research for reproducibility, public scrutiny, and standards development.
+> Individual Entity Proof Protocol (IEPP), conceived and developed by Woocheol Seo. The current public claim is limited to policy-relative canonical continuation under declared trust assumptions; it is not a proof of physical uniqueness, metaphysical originality, or entropy quality.
 
 The historical v0.3-v0.5 technical reports used earlier names and broader exploratory language. They are preserved as dated research records, while **Individual Entity Proof Protocol** is the sole current protocol name. The [research evolution map](docs/IEPP_Research_Evolution.md) identifies which historical hypotheses were retained, rejected, or narrowed.
 
@@ -70,6 +70,7 @@ IEPP does not by itself:
 - identify the canonical clone from output statistics alone.
 
 Runtime entropy helps independently executing forks diverge. **Entropy alone does not choose which branch is canonical.**
+The L1 control path is challenge freshness, predecessor agreement, authenticated evidence, and atomic head replacement. Entropy commitments are declared policy and audit hooks.
 
 ## Architecture
 
@@ -118,6 +119,7 @@ Platform Trust
 | v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 | v0.2.1 integrated durability prototype | F00-F12 deterministic cases completed | Supplemental single-host observation; not a general crash-consistency or production claim |
+| Entropy-field ablation | 0 replay false accepts / 10,000; 0 double accepts / 1,000 races | Removing entropy fields did not change the tested serialization outcomes |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
@@ -147,6 +149,7 @@ python experiments/iepp_v03_merged.py
 python experiments/iepp_v04_autocorrelation.py
 python -m unittest discover -s reference/iepp_vnext/tests -v
 python reference/iepp_vnext/benchmark.py
+python reference/iepp_vnext/entropy_ablation.py --replay-trials 10000 --fork-races 1000
 ```
 
 The experiments use runtime entropy, so exact numeric values can vary. Claims should be based on aggregate results, declared configurations, and reproducible manifests.
@@ -209,7 +212,7 @@ Until a stable archival citation is assigned, cite:
 
 ```text
 Seo, Woocheol. Individual Entity Proof Protocol (IEPP):
-Entropy-Anchored Execution-Lineage Continuity Verification.
+Policy-Relative Canonical Continuation for Copyable AI Agents.
 Research repository, 2026. https://github.com/swc8121-alt/iepp
 ```
 
@@ -218,7 +221,7 @@ BibTeX:
 ```bibtex
 @software{seo_iepp_2026,
   author = {Woocheol Seo},
-  title = {Individual Entity Proof Protocol (IEPP): Entropy-Anchored Execution-Lineage Continuity Verification},
+  title = {IEPP: Policy-Relative Canonical Continuation for Copyable AI Agents},
   year = {2026},
   url = {https://github.com/swc8121-alt/iepp}
 }

@@ -1,0 +1,17 @@
+{
+  "schema": "iepp-entropy-ablation-v1",
+  "variant": "no-entropy-fields",
+  "retained_controls": [
+    "registered-key",
+    "one-time-challenge",
+    "predecessor",
+    "monotonic-counter",
+    "signature",
+    "atomic-head-update"
+  ],
+  "replay_trials": 10000,
+  "replay_false_accepts": 0,
+  "fork_races": 1000,
+  "double_accepts": 0,
+  "claim": "Entropy fields are not the mechanism that serializes canonical successors."
+}

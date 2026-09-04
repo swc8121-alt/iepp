@@ -79,7 +79,7 @@ def run(steps: int = 2_000) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--steps", type=int, default=2_000)
-    parser.add_argument("--output", type=Path, default=Path("iepp_lab/results/fault_injection_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/fault_injection_v1.json"))
     args = parser.parse_args()
     result = run(args.steps)
     args.output.parent.mkdir(parents=True, exist_ok=True)
