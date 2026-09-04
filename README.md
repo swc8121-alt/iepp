@@ -16,7 +16,7 @@ Canonical attribution:
 
 > Individual Entity Proof Protocol (IEPP), conceived and developed by Woocheol Seo. The current public claim is limited to policy-relative canonical continuation under declared trust assumptions; it is not a proof of physical uniqueness, metaphysical originality, or entropy quality.
 
-The historical v0.3-v0.5 technical reports used earlier names and broader exploratory language. They are preserved as dated research records, while **Individual Entity Proof Protocol** is the sole current protocol name. The [research evolution map](docs/IEPP_Research_Evolution.md) identifies which historical hypotheses were retained, rejected, or narrowed.
+Earlier project materials used the names **Intrinsic Entropy Proof of Presence**, **Trajectory-based identity protocol**, and the broader phrase **AI existence proof**. These are retained only as historical research terminology. The historical v0.3-v0.5 whitepapers are preserved as dated research records, while **Individual Entity Proof Protocol (IEPP)** is the sole current protocol name and **policy-relative canonical continuation** is the current claim. The [research evolution map](docs/IEPP_Research_Evolution.md) identifies which historical hypotheses were retained, rejected, or narrowed.
 
 ## New to IEPP?
 
