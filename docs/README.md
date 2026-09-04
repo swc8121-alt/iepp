@@ -37,7 +37,7 @@ This table is a navigation aid rather than a ladder of increasingly proven claim
 ## Documentation rules
 
 - Current technical claims must link to evidence or be labeled as conjecture/design work.
-- “AI existence proof” is an explanatory umbrella, not an unrestricted cryptographic guarantee.
+- “Intrinsic Entropy Proof of Presence,” “trajectory-based identity protocol,” and “AI existence proof” are historical project terminology, not names or guarantees of the current protocol.
 - “Clone detection” must specify whether it means divergence observation, anomaly detection, or canonical fork rejection.
 - Statistical results must not be described as canonical identity decisions.
 - Hardware-backed claims require hardware-backed tests and an identified evidence level.
