@@ -8,6 +8,8 @@ This branch adds a bounded executable model for the new canonical-continuation s
 cd reference/iepp_vnext
 python run_trp2_ci.py
 python -m unittest -v test_trp2_unittest.py
+python -m unittest discover -s tests -v
+python entropy_ablation.py --replay-trials 10000 --fork-races 1000
 ```
 
 Expected bounded-model outcome:

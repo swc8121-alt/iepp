@@ -2,6 +2,8 @@
 
 This directory is the current technical source of truth. Root-level whitepapers remain available as historical research records.
 
+Readers encountering IEPP for the first time should begin with [`IEPP_Research_Evolution.md`](IEPP_Research_Evolution.md). It identifies which early hypotheses were supported, which failed, and how the current registry-relative canonical-continuation question emerged.
+
 ## Current normative-direction drafts
 
 1. [`IEPP_Core_Specification_v0.2.md`](IEPP_Core_Specification_v0.2.md)  
@@ -20,6 +22,8 @@ These are working drafts. They guide implementation and experiments but do not y
 
 ## Historical sequence
 
+This table is a navigation aid rather than a ladder of increasingly proven claims. In particular, the v0.4 statistical result was negative and caused a change in the governing mechanism.
+
 | Stage | Central question | Current interpretation |
 |---|---|---|
 | v0.1 | Can intrinsic entropy serve as an identity signal? | Entropy contributes divergence but does not select a canonical identity |
@@ -33,7 +37,7 @@ These are working drafts. They guide implementation and experiments but do not y
 ## Documentation rules
 
 - Current technical claims must link to evidence or be labeled as conjecture/design work.
-- “AI existence proof” is an explanatory umbrella, not an unrestricted cryptographic guarantee.
+- “Intrinsic Entropy Proof of Presence,” “trajectory-based identity protocol,” and “AI existence proof” are historical project terminology, not names or guarantees of the current protocol.
 - “Clone detection” must specify whether it means divergence observation, anomaly detection, or canonical fork rejection.
 - Statistical results must not be described as canonical identity decisions.
 - Hardware-backed claims require hardware-backed tests and an identified evidence level.

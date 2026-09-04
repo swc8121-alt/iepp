@@ -64,7 +64,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--depth", type=int, default=7)
     parser.add_argument("--challenges", type=int, default=7)
-    parser.add_argument("--output", type=Path, default=Path("iepp_lab/results/bounded_model_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/bounded_model_v1.json"))
     args = parser.parse_args()
     result = check(args.depth, args.challenges)
     args.output.parent.mkdir(parents=True, exist_ok=True)
