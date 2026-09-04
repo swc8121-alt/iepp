@@ -16,6 +16,13 @@ Implemented primitives:
 - append-only hash-chained audit events and signed checkpoints;
 - authorized key migration and split-view checkpoint detection.
 
+The smallest local multi-agent orchestration slice is documented in
+`../../docs/IEPP_Multi_Agent_Orchestration_Demo_v0.1.md` and runs with:
+
+```bash
+python orchestration_demo.py --output results/orchestration_demo_v0.1.jsonl
+```
+
 IEPP proves only the protocol claim under its trust assumptions. It does not
 prove consciousness, personhood, metaphysical identity, or which exact clone
 is the “original” without canonical registry policy.
