@@ -98,6 +98,7 @@ Platform Trust
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
 | Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
 | Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
+| A3 safe-resume demo | [`docs/A3_VirtualBox_Runbook_KO.md`](docs/A3_VirtualBox_Runbook_KO.md) | Signed same-credential fork race over an HTTP registry, plus the 2-VM execution procedure |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -119,6 +120,7 @@ Platform Trust
 | v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 | v0.2.1 integrated durability prototype | F00-F12 deterministic cases completed | Supplemental single-host observation; not a general crash-consistency or production claim |
+| A3 signed safe-resume loopback | 0 double accepts in 100 mixed challenge races | One online HTTP registry accepted exactly one signed successor and one cooperative simulated action per race; this was not a VirtualBox run |
 | Entropy-field ablation | 0 replay false accepts / 10,000; 0 double accepts / 1,000 races | Removing entropy fields did not change the tested serialization outcomes |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
@@ -148,6 +150,7 @@ pip install -r requirements.txt
 python experiments/iepp_v03_merged.py
 python experiments/iepp_v04_autocorrelation.py
 python -m unittest discover -s reference/iepp_vnext/tests -v
+python reference/iepp_vnext/a3_safe_resume_demo.py --workspace ./a3-demo-output --trials 25
 python reference/iepp_vnext/benchmark.py
 python reference/iepp_vnext/entropy_ablation.py --replay-trials 10000 --fork-races 1000
 ```

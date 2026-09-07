@@ -18,6 +18,10 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 4. [`IEPP_Public_Evidence_Boundary_v0.2.1.md`](IEPP_Public_Evidence_Boundary_v0.2.1.md)
    Public claim boundary, supplemental durability observations, and deliberately non-public operational material.
 
+## Experimental runbooks
+
+- [`A3_VirtualBox_Runbook_KO.md`](A3_VirtualBox_Runbook_KO.md) — signed same-credential fork race over the HTTP registry, one-command loopback reproduction, and the still-pending physical 2-VM procedure.
+
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
 ## Historical sequence

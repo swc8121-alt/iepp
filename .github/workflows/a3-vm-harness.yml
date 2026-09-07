@@ -1,0 +1,33 @@
+name: A3 VM Fork Harness
+
+on:
+  push:
+    branches: [main, "agent/**"]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  a3-harness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Compile A3 modules
+        working-directory: reference/iepp_vnext
+        run: python -m py_compile a3_registry.py a3_registry_server.py a3_vm_runner.py a3_safe_resume_demo.py
+      - name: Run A3 signed fork tests
+        working-directory: reference/iepp_vnext
+        run: python -m unittest discover -s tests -p 'test_a3_vm_runner.py' -v
+      - name: Run one-command safe-resume integration demo
+        working-directory: reference/iepp_vnext
+        run: >-
+          python a3_safe_resume_demo.py
+          --workspace "${RUNNER_TEMP}/iepp-a3"
+          --trials 10

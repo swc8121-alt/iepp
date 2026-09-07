@@ -45,6 +45,13 @@ class SQLiteCanonicalStore:
             raise KeyError(sid)
         return StoredHead(row[0], row[1], row[2], row[3])
 
+    def contains_evidence(self, evidence_id: bytes) -> bool:
+        """Return whether an evidence identifier was already committed."""
+        row = self.connection.execute(
+            "SELECT 1 FROM accepted_evidence WHERE evidence_id = ?", (evidence_id,)
+        ).fetchone()
+        return row is not None
+
     def compare_and_swap(self, sid: str, expected_counter: int, expected_head: bytes,
                          new_counter: int, new_head: bytes, evidence_id: bytes,
                          inject_failure: bool = False) -> tuple[bool, str]:
@@ -84,4 +91,3 @@ class SQLiteCanonicalStore:
             if inject_failure:
                 return False, "INJECTED_ROLLBACK"
             raise
-
