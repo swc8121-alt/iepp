@@ -2,13 +2,28 @@
 
 All notable changes to this research project are documented here.
 
+> **Historical-status notice:** v0.1-v0.5 entries record the questions and language used at the time. They are not cumulative proof claims. For the current interpretation, including negative results and superseded hypotheses, see `docs/IEPP_Research_Evolution.md` and the current core specification.
+
 ---
 
-## v0.5 (in progress)
-- TRP hardness formal conjecture
+## v0.5 (historical policy proposal)
+- TRP hardness recorded as an open conjecture, not a proven assumption
 - Policy layer separation
 - Genesis registry proposal
 - Multi-layer application examples
+
+---
+
+## Core v0.1-v0.2.1 (current research consolidation)
+- IEPP renamed and narrowed to Individual Entity Proof Protocol
+- canonical continuation separated from metaphysical originality
+- TRP 2.0 reframed as a capability-indexed Canonical Continuation Game
+- authenticated predecessor-bound transitions and atomic single-successor acceptance implemented
+- predictable-entropy, key-plus-state, registry-split, and statistical-separation negative controls made mandatory
+- L1 single-registry evidence boundary and F00-F12 single-host durability limits documented
+- entropy-field ablation confirmed that tested L1 serialization comes from freshness, predecessor agreement, signatures, and atomic head update rather than entropy
+- public title, citation metadata, README, and manuscript aligned to policy-relative canonical continuation
+- arXiv manuscript and reproducibility package prepared for independent review
 
 ---
 

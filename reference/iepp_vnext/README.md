@@ -23,10 +23,13 @@ is the “original” without canonical registry policy.
 ## Run the validation
 
 ```bash
-python -m unittest discover -s iepp_lab/tests -v
-python iepp_lab/benchmark.py --valid-steps 50000 --attack-trials 10000 --fork-races 1000
-python iepp_lab/negative_boundaries.py --predictable-steps 1000
-python iepp_lab/performance.py --iterations 10000
+cd reference/iepp_vnext
+python -m unittest discover -s tests -v
+python benchmark.py --valid-steps 50000 --attack-trials 10000 --fork-races 1000
+python negative_boundaries.py --predictable-steps 1000
+python entropy_ablation.py --replay-trials 10000 --fork-races 1000
+python performance.py --iterations 10000
 ```
 
-See `PRIVATE_CORE_VALIDATION_REPORT_KO.md` for measured results and required negative findings.
+Machine-readable outputs are stored under `results/`. The entropy ablation is
+an experimental comparison variant, not a deployable IEPP wire profile.

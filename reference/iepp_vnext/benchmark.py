@@ -107,7 +107,7 @@ if __name__ == "__main__":
     parser.add_argument("--valid-steps", type=int, default=50_000)
     parser.add_argument("--attack-trials", type=int, default=10_000)
     parser.add_argument("--fork-races", type=int, default=1_000)
-    parser.add_argument("--output", type=Path, default=Path("iepp_lab/results/core_benchmark_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/core_benchmark_v1.json"))
     args = parser.parse_args()
     result = run(args.valid_steps, args.attack_trials, args.fork_races)
     args.output.parent.mkdir(parents=True, exist_ok=True)

@@ -95,7 +95,7 @@ def run(predictable_steps: int = 1_000) -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--predictable-steps", type=int, default=1_000)
-    parser.add_argument("--output", type=Path, default=Path("iepp_lab/results/negative_boundaries_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/negative_boundaries_v1.json"))
     args = parser.parse_args()
     result = run(args.predictable_steps)
     args.output.parent.mkdir(parents=True, exist_ok=True)
