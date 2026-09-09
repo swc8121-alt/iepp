@@ -1,9 +1,8 @@
 @description('Azure region with DCasv5 Confidential VM capacity.')
 @allowed([
-  'koreacentral'
-  'koreasouth'
+  'japaneast'
 ])
-param location string = resourceGroup().location
+param location string = 'japaneast'
 
 @description('SSH user created on both experiment VMs.')
 param adminUsername string = 'ieppadmin'
@@ -176,7 +175,5 @@ resource vms 'Microsoft.Compute/virtualMachines@2024-07-01' = [for (name, i) in 
 
 output nodePublicIps array = [for i in range(0, 2): publicIps[i].properties.ipAddress]
 output nodePrivateIps array = [for i in range(0, 2): nics[i].properties.ipConfigurations[0].properties.privateIPAddress]
-output attestationIssuer string = location == 'koreasouth'
-  ? 'https://sharedkrs.krs.attest.azure.net'
-  : 'https://sharedkrc.krc.attest.azure.net'
+output attestationIssuer string = 'https://sharedjpe.jpe.attest.azure.net'
 output pinnedAttestationToolCommit string = upstreamAttestationCommit

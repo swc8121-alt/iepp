@@ -4,7 +4,7 @@ set -euo pipefail
 : "${IEPP_SSH_PUBLIC_KEY:?Set IEPP_SSH_PUBLIC_KEY to an OpenSSH public key}"
 : "${IEPP_ADMIN_SOURCE_CIDR:?Set IEPP_ADMIN_SOURCE_CIDR, normally your public IPv4/32}"
 
-IEPP_LOCATION="${IEPP_LOCATION:-koreacentral}"
+IEPP_LOCATION="${IEPP_LOCATION:-japaneast}"
 IEPP_RESOURCE_GROUP="${IEPP_RESOURCE_GROUP:-iepp-l2-experiment}"
 IEPP_GIT_REF="${IEPP_GIT_REF:-agent/l2-azure-cvm}"
 IEPP_DELETE_AFTER_UTC="${IEPP_DELETE_AFTER_UTC:-$(date -u -d '+3 hours' '+%Y-%m-%dT%H:%M:%SZ')}"
@@ -24,6 +24,8 @@ az deployment group what-if \
     ieppGitRef="$IEPP_GIT_REF" \
     deleteAfterUtc="$IEPP_DELETE_AFTER_UTC"
 
+echo "Published Japan East retail estimate: about USD 0.241/hour for the two-VM stack."
+echo "Three hours is about USD 0.73 before tax, FX spread, data transfer, and subscription-specific discounts."
 read -r -p "This creates two billable Confidential VMs. Type DEPLOY to continue: " IEPP_CONFIRM
 if [[ "$IEPP_CONFIRM" != "DEPLOY" ]]; then
   echo "Deployment cancelled. The empty resource group is not billable."

@@ -35,11 +35,25 @@ process memory, make one registry partition-safe, or turn a finite experiment in
 Check the current Azure price for the selected subscription/region immediately before deployment. Do not infer a final
 charge from a documentation estimate: reservations, taxes, currency conversion, disk and IP billing can differ.
 
+Public retail estimate checked 2026-09-09 for Japan East:
+
+| Item | Public rate | Two-node hourly estimate |
+|---|---:|---:|
+| `Standard_DC2as_v5` Linux VM | USD 0.112/hour | USD 0.224 |
+| Standard static public IPv4 | USD 0.005/hour | USD 0.010 |
+| E4 LRS Standard SSD (32-GiB billing tier) | USD 2.40/month | about USD 0.0066 |
+| **Approximate stack total** |  | **USD 0.241/hour** |
+
+At that rate, three hours is about USD 0.73, or roughly KRW 980 at KRW 1,340/USD, before tax, exchange spread, data
+transfer, disk operations, and subscription-specific pricing. Use USD 2 / KRW 3,000 as the experiment stop-and-review
+ceiling, not as a guaranteed invoice amount. Sources: [Azure Retail Prices API](https://learn.microsoft.com/en-us/rest/api/cost-management/retail-prices/azure-retail-prices)
+and [Azure pricing calculator](https://azure.microsoft.com/pricing/calculator/).
+
 ## Prerequisites
 
 - Azure CLI authenticated to the intended subscription;
 - permission to create and delete resource groups, network resources, and Confidential VMs;
-- DCasv5 quota/capacity in Korea Central (or an explicitly reviewed alternative region);
+- DCasv5 quota/capacity in Japan East;
 - an OpenSSH key pair and the operator's current public IPv4 `/32` CIDR;
 - Bash with GNU `date` for the helper scripts.
 
@@ -51,7 +65,7 @@ The Microsoft evidence collector is pinned to upstream commit
 ```bash
 export IEPP_SSH_PUBLIC_KEY="$(< ~/.ssh/id_ed25519.pub)"
 export IEPP_ADMIN_SOURCE_CIDR="203.0.113.10/32"
-export IEPP_LOCATION="koreacentral"
+export IEPP_LOCATION="japaneast"
 export IEPP_RESOURCE_GROUP="iepp-l2-experiment"
 bash deploy/azure/l2/deploy.sh
 ```
@@ -65,7 +79,7 @@ Use the `nodePublicIps` and `attestationIssuer` deployment outputs. On each node
 ```bash
 sudo /opt/iepp-l2/venv/bin/python \
   /opt/iepp-l2/iepp/reference/iepp_vnext/l2_live_smoke.py \
-  --issuer https://sharedkrc.krc.attest.azure.net
+  --issuer https://sharedjpe.jpe.attest.azure.net
 ```
 
 Expected result: `CONTINUITY_VALID`. Store the printed result, not the raw JWT. The result includes only a JWT hash,
@@ -78,7 +92,7 @@ Copy only node 1's sealed public/private blobs to a fresh directory on node 2. D
 ```bash
 sudo /opt/iepp-l2/venv/bin/python \
   /opt/iepp-l2/iepp/reference/iepp_vnext/l2_live_smoke.py \
-  --issuer https://sharedkrc.krc.attest.azure.net \
+  --issuer https://sharedjpe.jpe.attest.azure.net \
   --key-directory /var/lib/iepp-l2/copied-node-1-key \
   --unseal-only
 ```
