@@ -16,6 +16,10 @@ Implemented primitives:
 - append-only hash-chained audit events and signed checkpoints;
 - authorized key migration and split-view checkpoint detection.
 
+The optional L2 Azure experiment adds a fail-closed MAA JWT policy gate and a
+PCR-bound vTPM sealed-key adapter. See
+[`../../docs/IEPP_L2_Azure_CVM_Runbook.md`](../../docs/IEPP_L2_Azure_CVM_Runbook.md).
+
 IEPP proves only the protocol claim under its trust assumptions. It does not
 prove consciousness, personhood, metaphysical identity, or which exact clone
 is the “original” without canonical registry policy.

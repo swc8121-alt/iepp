@@ -33,6 +33,9 @@ jobs:
       - name: Compile reference implementation
         run: python -m compileall -q reference/iepp_vnext
 
+      - name: Compile Azure L2 Bicep template
+        run: az bicep build --file deploy/azure/l2/main.bicep --stdout > /dev/null
+
       - name: Run unit and durability tests
         run: python -m unittest discover -s reference/iepp_vnext/tests -v
 
