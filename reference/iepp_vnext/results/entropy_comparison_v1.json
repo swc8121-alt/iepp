@@ -1,0 +1,231 @@
+{
+  "schema": "iepp-entropy-comparison-v1",
+  "evidence_level": "L1",
+  "base_commit": "fe9b86e0f34ec34155a70c36a99714440bb09947",
+  "source_sha256": {
+    "core.py": "a166c99a3b466c7d8ad2365420d53651d0431edf911e8b467e20e04fec3a16dd",
+    "entropy_ablation.py": "e1e08e3175b945f79e7b63f1d1a71bc1b099ca23820dbfdc84ee69e406cb950d",
+    "entropy_comparison.py": "da94598fb5828eb68e635b96e4889923a09d1f2c2f887b16827c84539c224c41"
+  },
+  "concurrent_submission": "alternating which branch is submitted first; no fairness claim",
+  "python": "3.12.14",
+  "platform": "Linux-6.18.35-x86_64-with-glibc2.39",
+  "trials_per_case": 1000,
+  "scope": "single-process threads, one in-memory registry; no VM, attestation, or physical entropy",
+  "baseline_limit": "Existing entropy_ablation implementation; narrower validation and no audit checkpoint parity.",
+  "modes": {
+    "os_random": {
+      "original_first": {
+        "original_accepts": 1000,
+        "clone_accepts": 0,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "clone_first": {
+        "original_accepts": 0,
+        "clone_accepts": 1000,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "concurrent": {
+        "original_accepts": 500,
+        "clone_accepts": 500,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "same_challenge_divergences": 1000,
+      "replay_false_accepts": 0,
+      "unsigned_tamper_false_accepts": 0,
+      "four_step_sequence": [
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        }
+      ],
+      "disallowed_source": [
+        false,
+        "ENTROPY_SOURCE_NOT_ALLOWED"
+      ]
+    },
+    "fixed": {
+      "original_first": {
+        "original_accepts": 1000,
+        "clone_accepts": 0,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "clone_first": {
+        "original_accepts": 0,
+        "clone_accepts": 1000,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "concurrent": {
+        "original_accepts": 500,
+        "clone_accepts": 500,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "same_challenge_divergences": 0,
+      "replay_false_accepts": 0,
+      "unsigned_tamper_false_accepts": 0,
+      "four_step_sequence": [
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": false,
+          "reason": "ENTROPY_REPEATED"
+        }
+      ],
+      "disallowed_source": [
+        false,
+        "ENTROPY_SOURCE_NOT_ALLOWED"
+      ]
+    },
+    "alternating": {
+      "original_first": {
+        "original_accepts": 1000,
+        "clone_accepts": 0,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "clone_first": {
+        "original_accepts": 0,
+        "clone_accepts": 1000,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "concurrent": {
+        "original_accepts": 500,
+        "clone_accepts": 500,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "same_challenge_divergences": 0,
+      "replay_false_accepts": 0,
+      "unsigned_tamper_false_accepts": 0,
+      "four_step_sequence": [
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        }
+      ],
+      "disallowed_source": [
+        false,
+        "ENTROPY_SOURCE_NOT_ALLOWED"
+      ]
+    },
+    "predictable_unique": {
+      "original_first": {
+        "original_accepts": 1000,
+        "clone_accepts": 0,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "clone_first": {
+        "original_accepts": 0,
+        "clone_accepts": 1000,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "concurrent": {
+        "original_accepts": 500,
+        "clone_accepts": 500,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "same_challenge_divergences": 0,
+      "replay_false_accepts": 0,
+      "unsigned_tamper_false_accepts": 0,
+      "four_step_sequence": [
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        },
+        {
+          "accepted": true,
+          "reason": "CONTINUITY_VALID"
+        }
+      ],
+      "disallowed_source": [
+        false,
+        "ENTROPY_SOURCE_NOT_ALLOWED"
+      ]
+    },
+    "no_entropy": {
+      "original_first": {
+        "original_accepts": 1000,
+        "clone_accepts": 0,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "clone_first": {
+        "original_accepts": 0,
+        "clone_accepts": 1000,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "concurrent": {
+        "original_accepts": 500,
+        "clone_accepts": 500,
+        "double_accepts": 0,
+        "zero_accepts": 0
+      },
+      "same_challenge_divergences": 0,
+      "replay_false_accepts": 0,
+      "unsigned_tamper_false_accepts": 0,
+      "four_step_sequence": [
+        {
+          "accepted": true,
+          "reason": "ACCEPT"
+        },
+        {
+          "accepted": true,
+          "reason": "ACCEPT"
+        },
+        {
+          "accepted": true,
+          "reason": "ACCEPT"
+        },
+        {
+          "accepted": true,
+          "reason": "ACCEPT"
+        }
+      ]
+    }
+  }
+}

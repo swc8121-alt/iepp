@@ -8,6 +8,7 @@ atomic registry update while omitting entropy_commitment and entropy_source.
 from __future__ import annotations
 
 import argparse
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, replace
 from hashlib import sha256
 import json
@@ -128,12 +129,20 @@ def run(replay_trials: int = 10_000, fork_races: int = 1_000) -> dict:
                              nonce=sha256(f"f1-{trial}".encode()).digest())
         c2 = authority.issue("entity", "domain", now=trial, ttl=5,
                              nonce=sha256(f"f2-{trial}".encode()).digest())
-        accepted = sum((registry.verify_and_advance(first.transition(c1), trial),
-                        registry.verify_and_advance(second.transition(c2), trial)))
+        # Both candidates exist before two worker threads meet at the barrier.
+        e1, e2 = first.transition(c1), second.transition(c2)
+        barrier = threading.Barrier(2, timeout=10)
+        def verify(evidence):
+            barrier.wait()
+            return registry.verify_and_advance(evidence, trial)
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            left, right = pool.submit(verify, e1), pool.submit(verify, e2)
+            accepted = int(left.result(timeout=15)) + int(right.result(timeout=15))
         double_accepts += int(accepted > 1)
 
     return {
-        "schema": "iepp-entropy-ablation-v1",
+        "schema": "iepp-entropy-ablation-v2",
+        "execution": "two barrier-synchronized threads; single in-memory registry",
         "variant": "no-entropy-fields",
         "retained_controls": ["registered-key", "one-time-challenge", "predecessor",
                               "monotonic-counter", "signature", "atomic-head-update"],
@@ -149,7 +158,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--replay-trials", type=int, default=10_000)
     parser.add_argument("--fork-races", type=int, default=1_000)
-    parser.add_argument("--output", type=Path, default=Path("results/entropy_ablation_v1.json"))
+    parser.add_argument("--output", type=Path, default=Path("results/entropy_ablation_concurrent_v2.json"))
     args = parser.parse_args()
     result = run(args.replay_trials, args.fork_races)
     args.output.parent.mkdir(parents=True, exist_ok=True)
