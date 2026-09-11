@@ -123,6 +123,10 @@ Platform Trust
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
+### Supplemental entropy comparison (2026-09-11)
+
+A [controlled L1 comparison](docs/IEPP_Entropy_Comparison_2026-09-11.md) separates same-input branch divergence from canonical successor serialization. It also corrects the entropy-ablation runner to use barrier-synchronized threads; the historical v1 runner checked competing branches sequentially. Changing predictable entropy passed the current immediate-repeat check, and a full key/state clone verified first was accepted in every ordered control. These observations do not establish entropy quality, original-only protection, or L2 evidence.
+
 ## Quick start
 
 Requirements: Python 3.10 or later.
