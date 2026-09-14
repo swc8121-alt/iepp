@@ -2,6 +2,10 @@
 
 This directory contains structured copies of the repository's original Colab-ready experiments. The original root files remain unchanged to preserve project history.
 
+## Dated evidence packages
+
+- [A3 VirtualBox, 2026-09-14](a3-virtualbox-2026-09-14/README.md): five cases / nine client records, including four paired trials and one actual rollback submission. Shared serial challenge decisions are corroborated by server records. Partial L1 evidence only; see the remaining matrix and provenance limits in the package.
+
 ## Files
 
 - `iepp_v03_merged.py`: three-layer trajectory plausibility experiment.
@@ -34,6 +38,6 @@ python experiments/iepp_v04_autocorrelation.py
 
 - fixed experiment manifests and machine-readable result files;
 - seeded negative controls alongside OS-entropy runs;
-- VM snapshot, rollback, and fork-race tests;
+- complete VM snapshot/restore coverage and server-observed competing-submission tests, building on the partial dated package above;
 - confidence intervals and resource measurements;
 - independent reproduction.

@@ -32,7 +32,7 @@ For the shortest professional path through the current work:
 ## Status
 
 - Research specification: v0.2.1 working draft
-- Experimental evidence: software-only simulations
+- Experimental evidence: L1 software experiments and [partial VirtualBox snapshot/fork observations](experiments/a3-virtualbox-2026-09-14/README.md)
 - Production readiness: not production ready
 - Formal security proof: not established
 - Patent status: PCT application filed
@@ -107,6 +107,8 @@ Platform Trust
 | Security | [`SECURITY.md`](SECURITY.md) | Responsible reporting and current security boundary |
 
 ## Current experimental evidence
+
+**14 September 2026 — [A3 VirtualBox evidence package](experiments/a3-virtualbox-2026-09-14/README.md):** four paired trials each recorded one accepted successor, and a separate actual VM rollback submission was rejected (nine client records total). The shared-challenge serial case also matches the supplied server log. This is partial L1 coverage; controlled server-side overlap, the complete A3 matrix and hardware-backed L2 remain unvalidated. [한국어 보고서](experiments/a3-virtualbox-2026-09-14/REPORT_KO.md) · [Next-stage plan](experiments/a3-virtualbox-2026-09-14/NEXT_STAGE_KO.md).
 
 | Observation | Reported result | Correct interpretation |
 |---|---:|---|

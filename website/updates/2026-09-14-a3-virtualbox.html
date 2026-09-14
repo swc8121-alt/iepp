@@ -1,0 +1,32 @@
+<!-- Publication source: prepared for entropyproof.com; repository presence does not mean WordPress publication. -->
+<article lang="en">
+  <header>
+    <p>Research update · 14 September 2026 · L1 experimental evidence</p>
+    <h1>IEPP A3: initial VirtualBox snapshot and fork results</h1>
+    <p>Four two-branch trials each recorded one accepted successor. A separate submission after an actual VM rollback was rejected.</p>
+  </header>
+  <p>This update adds five cases and nine client records from a Windows-hosted registry and Ubuntu VirtualBox clients. In the shared-challenge serial case, the server records agree with both client results.</p>
+  <table>
+    <caption>Observed cases; one run per listed case</caption>
+    <thead><tr><th scope="col">Case</th><th scope="col">Observation</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">Fresh challenges, A then B</th><td>A accepted; B rejected as rollback or losing fork.</td></tr>
+      <tr><th scope="row">Fresh challenges, B then A</th><td>B accepted; A rejected as rollback or losing fork.</td></tr>
+      <tr><th scope="row">Common scheduled submission time</th><td>A accepted; B rejected. Server-side overlap was not established.</td></tr>
+      <tr><th scope="row">Actual VM rollback</th><td>The restored old state was rejected; the registry retained its accepted head.</td></tr>
+      <tr><th scope="row">Same challenge copied, A then B</th><td>A accepted; B rejected as CHALLENGE_USED before expiration.</td></tr>
+    </tbody>
+  </table>
+  <h2>What the evidence supports</h2>
+  <p>Within the observed runs, a single online registry maintained one accepted continuation under its declared policy. The protected action was simulated, and the application cooperated with the registry decision.</p>
+  <p>B won when submitted first. These results therefore do not identify an intrinsic or physical original. They do not establish entropy quality, malicious-hypervisor resistance, hardware-backed L2, production readiness or complete A3 coverage.</p>
+  <h2>Next steps</h2>
+  <p>Complete provenance and earlier server-log collection; add approved-state snapshot export and server timing observations; test snapshots after an accepted transition, shared-challenge reverse order and explicit restore; then run a predefined competing-submission matrix. Entropy fault injection and hardware-backed L2 entry criteria remain separate work.</p>
+  <p><a href="https://github.com/swc8121-alt/iepp/tree/main/experiments/a3-virtualbox-2026-09-14">Read the evidence package and raw result logs</a> · <a href="https://github.com/swc8121-alt/iepp/tree/main/experiments/a3-virtualbox-2026-09-14/NEXT_STAGE_KO.md">Read the next-stage plan</a></p>
+  <section lang="ko">
+    <h2>한국어 요약</h2>
+    <p>실제 VirtualBox 환경에서 5개 사례·클라이언트 기록 9건을 확보했습니다. 두 분기를 제출한 4개 시험에서는 각각 하나만 승인됐고, 과거 VM 스냅샷으로 실제 복원한 뒤 제출한 1건은 차단됐습니다. 동일 챌린지를 복제한 순차 시험은 서버 기록과도 일치했습니다.</p>
+    <p>이 결과는 단일 온라인 레지스트리와 협조적인 보호 게이트를 전제로 한 L1 증거입니다. A3 전체 또는 L2 완료를 뜻하지 않으며, 실제 보호 작업은 모의 실행이었습니다.</p>
+    <p><a href="https://github.com/swc8121-alt/iepp/tree/main/experiments/a3-virtualbox-2026-09-14/REPORT_KO.md">한국어 상세 보고서</a></p>
+  </section>
+</article>
