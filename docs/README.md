@@ -20,6 +20,10 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
+## Dated experiment evidence
+
+- [A3 VirtualBox observations, 2026-09-14](../experiments/a3-virtualbox-2026-09-14/README.md): raw result logs, Korean report, hashes, limitations and the next-stage plan. This package is partial L1 evidence and does not revise the normative claim boundary.
+
 ## Historical sequence
 
 This table is a navigation aid rather than a ladder of increasingly proven claims. In particular, the v0.4 statistical result was negative and caused a change in the governing mechanism.

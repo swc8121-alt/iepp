@@ -1,0 +1,40 @@
+{
+  "schema": "iepp-a3-public-evidence-manifest-v1",
+  "date": "2026-09-14",
+  "evidence_level": "L1",
+  "scope": "single online registry with cooperative policy gate",
+  "coverage": "partial A3 matrix",
+  "trial_cases": 5,
+  "paired_trials": 4,
+  "client_records": 9,
+  "accepted": 4,
+  "rejected": 5,
+  "source_commit": "a8a5ef374afb18f2c8a7014641fa9fad33fdb26d",
+  "source_revision_in_original_logs": "UNKNOWN",
+  "files": [
+    {
+      "path": "logs/a3-first-three-results.jsonl",
+      "sha256": "07bc773aaa86f1f2efe9a088dec01be0dea68d9781c30589eca4e2529f3e86db",
+      "bytes": 8374
+    },
+    {
+      "path": "logs/combined-S2-0001.jsonl",
+      "sha256": "ed8928b5ce0861ef7a812799eba6fd1a47d334c37482160ad48a165189cd6d5c",
+      "bytes": 2778
+    },
+    {
+      "path": "logs/registry-events.jsonl",
+      "sha256": "1d80ba71225427e6e494f445ad9e6c55f6ac91b1fc6e147700e8b34846350e5a",
+      "bytes": 2217
+    },
+    {
+      "path": "logs/result-restore-0001.jsonl",
+      "sha256": "327f0f40b18cbeeb83bc9c3455f0456fd54ccf5652f5eb7db994b51a959788c8",
+      "bytes": 1403
+    }
+  ],
+  "server_corroboration": [
+    "S2-0001"
+  ],
+  "screenshots": "operator screenshots reviewed in session; not included in public package"
+}
