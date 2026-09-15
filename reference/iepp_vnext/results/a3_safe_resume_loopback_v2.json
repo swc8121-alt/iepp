@@ -1,0 +1,39 @@
+{
+  "candidate_submissions": 200,
+  "canonical_accepts": 100,
+  "claim_scope": "L1 single online registry; signed lab key; cooperative simulated action gate",
+  "client_round_trip_ms": {
+    "maximum": 7.115501,
+    "mean": 2.146380785,
+    "minimum": 1.196575
+  },
+  "double_accepts": 0,
+  "experiment": "A3_SIGNED_SAME_CREDENTIAL_SAFE_RESUME",
+  "failures": [],
+  "fresh_post_restore_challenge_trials": 50,
+  "generated_at_utc": "2026-09-07T07:47:19.450835+00:00",
+  "iepp_source_revision": "33f8926783f25b2ff2c4ca7f1683b6e244d107c1",
+  "not_tested": [
+    "VirtualBox or hypervisor isolation",
+    "durable challenge state across registry restart",
+    "registry partitions or equivocation",
+    "TPM, TEE, secure element, or PUF binding",
+    "malicious code that bypasses the policy gate",
+    "consciousness, personhood, or metaphysical originality"
+  ],
+  "passed": true,
+  "registry_reasons": {
+    "CHALLENGE_USED": 50,
+    "CONTINUITY_VALID": 100,
+    "ROLLBACK_OR_LOSING_FORK": 50
+  },
+  "schema": "iepp-a3-safe-resume-summary-v2",
+  "shared_pre_restore_challenge_trials": 50,
+  "simulated_protected_actions": 100,
+  "tested_invariant": "exactly one accepted branch and one simulated protected action per two-branch trial",
+  "trials": 100,
+  "winning_branches": {
+    "A": 75,
+    "B": 25
+  }
+}

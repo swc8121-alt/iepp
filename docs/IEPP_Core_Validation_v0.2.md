@@ -1,7 +1,7 @@
 # IEPP Core Validation v0.2
 
 Status: reproducible L1 software experiment; not a production security claim  
-Date: 2026-08-28
+Date: 2026-08-28; A3 integration update: 2026-09-06
 
 ## Controlling result
 
@@ -29,13 +29,14 @@ python reference/iepp_vnext/negative_boundaries.py
 python reference/iepp_vnext/fault_injection.py
 python reference/iepp_vnext/bounded_model.py
 python reference/iepp_vnext/performance.py
+python reference/iepp_vnext/a3_safe_resume_demo.py --workspace ./a3-demo-output --trials 25
 ```
 
 ## Results
 
 | Test | Result |
 |---|---:|
-| Core and durable-store unit tests | 14 passed |
+| Core, durable-store, and A3 tests | 20 passed |
 | Valid sequential transitions | 50,000 / 50,000 accepted |
 | Exact replay false accepts | 0 / 10,000 |
 | Rollback or losing-fork false accepts | 0 / 10,000 |
@@ -47,6 +48,8 @@ python reference/iepp_vnext/performance.py
 | Bounded abstract states explored | 1,063,623 |
 | Bounded abstract transitions explored | 2,319,131 |
 | Bounded invariant violations | 0 |
+| A3 signed HTTP loopback races | 100 mixed challenge trials |
+| A3 double accepts / simulated double actions | 0 / 100; 0 / 100 |
 
 With zero observed false accepts in 10,000 trials, the finite-sample 95% upper bound is approximately 0.02995% per
 tested attack class. With zero double accepts in 1,000 races, the corresponding upper bound is approximately 0.2991%.
@@ -81,6 +84,18 @@ commit-response loss and exact retry, two-writer successor races, restart checkp
 and internally consistent old-snapshot restoration. The observed retry result confirms an earlier commit without a
 second state advance; it does not turn replay into a new acceptance. Exact schema, write order, and recovery policy
 remain outside the public L1 claim.
+
+## A3 signed safe-resume loopback
+
+The A3 harness places the same deliberately cloneable Ed25519 lab key, counter, and canonical head in two candidate
+branches. Each branch signs a transition and submits it through a threaded HTTP adapter to one SQLite-backed registry.
+The application-side gate records a simulated protected action only after registry acceptance.
+
+In 100 loopback races, comprising 50 fresh post-restore challenge trials and 50 shared pre-restore challenge trials,
+the registry accepted exactly one successor and the cooperative gate executed exactly one simulated action per trial.
+No double acceptance was observed. This is a finite single-host network integration result, not an actual VirtualBox
+run, proof against malicious gate bypass, durable-challenge test, partition test, or production security result. The
+machine-readable summary is `reference/iepp_vnext/results/a3_safe_resume_loopback_v2.json`.
 
 ## Required negative results
 
@@ -120,7 +135,7 @@ This v0.2 implementation and its results are L1 unless a test explicitly states 
 
 - publish an independently reviewable integration profile for cryptographic verification and durable storage without
   exposing deployment credentials or operational recovery controls;
-- execute real process-kill, filesystem, disk-fault, and VirtualBox snapshot/restore tests;
+- execute real process-kill, filesystem, disk-fault, and documented 2-VM VirtualBox snapshot/restore tests;
 - implement and test multi-registry checkpoint gossip/quorum;
 - inject process crashes, disk faults, packet loss, partitions, and recovery events;
 - define TPM/TEE/PUF evidence profiles;
