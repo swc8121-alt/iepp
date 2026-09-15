@@ -47,6 +47,7 @@ def result_row(candidate: dict, decision: dict, elapsed_ms: float) -> dict:
         "candidate_successor": evidence["state"],
         "transport_ok": True,
         "registry_reason": decision["reason"],
+        "registry_timing": decision.get("registry_timing"),
         "canonical_accept": accepted,
         "canonical_head_before": decision.get("canonical_head_before"),
         "canonical_head_after": decision.get("canonical_head_after"),

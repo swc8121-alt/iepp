@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
+import time
 from urllib.parse import parse_qs, urlparse
 
 from a3_registry import A3RegistryEngine
@@ -60,6 +61,7 @@ class A3RequestHandler(BaseHTTPRequestHandler):
         self._write(404, {"ok": False, "reason": "NOT_FOUND"})
 
     def do_POST(self) -> None:
+        received_ns = time.monotonic_ns()
         try:
             value = self._json_body()
         except (ValueError, json.JSONDecodeError) as error:
@@ -76,7 +78,10 @@ class A3RequestHandler(BaseHTTPRequestHandler):
             self._write(status, response)
             return
         if self.path == "/v1/transition":
-            status, response = self.server.engine.verify_and_advance(value)
+            status, response = self.server.engine.verify_and_advance(
+                value, request_received_monotonic_ns=received_ns,
+                body_complete_monotonic_ns=time.monotonic_ns(),
+            )
             self._write(status, response)
             return
         self._write(404, {"ok": False, "reason": "NOT_FOUND"})

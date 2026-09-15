@@ -13,6 +13,7 @@ from pathlib import Path
 import json
 import threading
 import time
+from uuid import uuid4
 
 from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
@@ -152,6 +153,7 @@ class A3RegistryEngine:
         self.event_log = Path(event_log) if event_log else None
         self._lock = threading.Lock()
         self._event_lock = threading.Lock()
+        self.server_instance_id = uuid4().hex
         try:
             stored = self.store.read(self.enrollment.sid)
         except KeyError:
@@ -198,19 +200,33 @@ class A3RegistryEngine:
             "last_evidence_id": stored.last_evidence_id.hex(),
         }
 
-    def verify_and_advance(self, value: dict, now: int | None = None) -> tuple[int, dict]:
+    def verify_and_advance(self, value: dict, now: int | None = None, *,
+                           request_received_monotonic_ns: int | None = None,
+                           body_complete_monotonic_ns: int | None = None) -> tuple[int, dict]:
+        entered = time.monotonic_ns()
+        timing = {
+            "schema": "iepp-a3-server-timing-v1",
+            "server_instance_id": self.server_instance_id,
+            "request_id": uuid4().hex,
+            "request_received_monotonic_ns": request_received_monotonic_ns,
+            "body_complete_monotonic_ns": body_complete_monotonic_ns,
+            "verification_requested_monotonic_ns": entered,
+            "lock_acquired_monotonic_ns": None,
+        }
         now = int(time.time()) if now is None else now
         try:
             evidence = evidence_from_dict(value)
         except (KeyError, TypeError, ValueError, OverflowError) as error:
+            timing["decision_monotonic_ns"] = time.monotonic_ns()
             return 400, {"ok": False, "accepted": False, "reason": "MALFORMED_EVIDENCE",
-                         "detail": str(error)}
+                         "detail": str(error), "registry_timing": timing}
 
         with self._lock:
+            timing["lock_acquired_monotonic_ns"] = time.monotonic_ns()
             before = self.store.read(self.enrollment.sid)
             reason = self._validate(evidence, before.counter, before.head, now)
             if reason is not None:
-                response = self._decision(False, reason, evidence, before.head, before.head)
+                response = self._decision(False, reason, evidence, before.head, before.head, timing)
                 self._append_event("TRANSITION_REJECTED", response)
                 return 200, response
 
@@ -224,13 +240,13 @@ class A3RegistryEngine:
             )
             if not ok:
                 after = self.store.read(self.enrollment.sid)
-                response = self._decision(False, cas_reason, evidence, before.head, after.head)
+                response = self._decision(False, cas_reason, evidence, before.head, after.head, timing)
                 self._append_event("TRANSITION_REJECTED", response)
                 return 200, response
             if not self.challenges.consume(evidence.challenge_id):
                 raise RuntimeError("challenge-consume-failed-after-commit")
             after = self.store.read(self.enrollment.sid)
-            response = self._decision(True, "CONTINUITY_VALID", evidence, before.head, after.head)
+            response = self._decision(True, "CONTINUITY_VALID", evidence, before.head, after.head, timing)
             self._append_event("TRANSITION_ACCEPTED", response)
             return 200, response
 
@@ -290,7 +306,7 @@ class A3RegistryEngine:
 
     @staticmethod
     def _decision(accepted: bool, reason: str, evidence: TransitionEvidence,
-                  before: bytes, after: bytes) -> dict:
+                  before: bytes, after: bytes, timing: dict) -> dict:
         return {
             "ok": True,
             "schema": "iepp-a3-registry-decision-v2",
@@ -304,6 +320,7 @@ class A3RegistryEngine:
             "canonical_head_before": before.hex(),
             "canonical_head_after": after.hex(),
             "decided_at_utc": utc_now(),
+            "registry_timing": {**timing, "decision_monotonic_ns": time.monotonic_ns()},
         }
 
     def _append_event(self, event: str, payload: dict) -> None:

@@ -23,6 +23,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.exceptions import InvalidSignature
 from cryptography.hazmat.primitives.serialization import (
     Encoding,
     NoEncryption,
@@ -30,8 +31,8 @@ from cryptography.hazmat.primitives.serialization import (
     PublicFormat,
 )
 
-from a3_registry import challenge_from_dict, evidence_to_dict
-from core import Prover, hash_parts
+from a3_registry import challenge_from_dict, evidence_from_dict, evidence_to_dict
+from core import PROTOCOL, Prover, hash_parts
 from durable_store import SQLiteCanonicalStore
 
 
@@ -40,12 +41,13 @@ def utc_now() -> str:
 
 
 def git_revision() -> str:
+    git = ["git", "-C", str(Path(__file__).resolve().parent)]
     try:
         revision = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
+            git + ["rev-parse", "HEAD"], text=True, stderr=subprocess.DEVNULL
         ).strip()
         dirty = subprocess.run(
-            ["git", "status", "--porcelain"], text=True, capture_output=True, check=True
+            git + ["status", "--porcelain"], text=True, capture_output=True, check=True
         ).stdout.strip()
         return revision + ("-dirty" if dirty else "")
     except (OSError, subprocess.SubprocessError):
@@ -65,6 +67,90 @@ def append_jsonl(path: Path, record: dict) -> None:
 def write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(value, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_private_snapshot(path: Path, value: dict) -> None:
+    """Create a lab-key file exclusively; never replace an existing snapshot."""
+    body = (json.dumps(value, indent=2, sort_keys=True) + "\n").encode("utf-8")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd = os.open(path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    try:
+        with os.fdopen(fd, "wb") as stream:
+            stream.write(body)
+            stream.flush()
+            os.fsync(stream.fileno())
+    except BaseException:
+        path.unlink(missing_ok=True)
+        raise
+
+
+def accepted_snapshot(snapshot: dict, candidate: dict, result: dict, head: dict) -> dict:
+    """Check signed local evidence and the live L1 head before exporting state.
+
+    The HTTP registry is trusted by the lab; its response is not an attestation.
+    A later competing transition can make the exported state stale immediately.
+    """
+    if snapshot.get("schema") != "iepp-a3-test-snapshot-v2":
+        raise ValueError("unsupported-snapshot-schema")
+    evidence = evidence_from_dict(candidate["evidence"])
+    private_key = Ed25519PrivateKey.from_private_bytes(bytes.fromhex(snapshot["private_key"]))
+    public_key = private_key.public_key()
+    fingerprint = sha256(public_key.public_bytes(Encoding.Raw, PublicFormat.Raw)).hexdigest()
+    if any(value != fingerprint for value in (
+            snapshot.get("public_key_fingerprint_sha256"),
+            candidate.get("public_key_fingerprint_sha256"),
+            result.get("public_key_fingerprint_sha256"))):
+        raise ValueError("snapshot-key-mismatch")
+    try:
+        public_key.verify(evidence.signature, evidence.unsigned_body())
+    except InvalidSignature as error:
+        raise ValueError("candidate-signature-invalid") from error
+    if (evidence.protocol != PROTOCOL or evidence.sid != snapshot["sid"] or
+            evidence.domain != snapshot["domain"] or evidence.key_id != snapshot["key_id"] or
+            evidence.previous.hex() != snapshot["canonical_head"] or
+            evidence.counter != snapshot["counter"] + 1):
+        raise ValueError("candidate-does-not-continue-snapshot")
+    expected_state = hash_parts(
+        b"IEPP-State-vNext-1", evidence.sid.encode(), evidence.domain.encode(),
+        evidence.counter.to_bytes(8, "big"), evidence.previous, evidence.challenge_id,
+        evidence.challenge_nonce, evidence.entropy_commitment, evidence.entropy_source.encode(),
+        evidence.runtime_commitment, evidence.attestation_commitment,
+    )
+    if evidence.state != expected_state:
+        raise ValueError("candidate-state-invalid")
+    if (result.get("canonical_accept") is not True or result.get("transport_ok") is not True or
+            result.get("transport_error") is not None or
+            result.get("registry_reason") != "CONTINUITY_VALID" or
+            result.get("protected_action") != "EXECUTED_SIMULATED"):
+        raise ValueError("result-is-not-an-accepted-transition")
+    expected = {
+        "evidence_id": evidence.evidence_id().hex(),
+        "challenge_id": evidence.challenge_id.hex(),
+        "presented_predecessor": evidence.previous.hex(),
+        "candidate_successor": evidence.state.hex(),
+        "canonical_head_before": evidence.previous.hex(),
+        "canonical_head_after": evidence.state.hex(),
+        "trial_id": candidate["trial_id"], "branch_id": candidate["branch_id"],
+        "case_id": candidate["case_id"],
+    }
+    if any(result.get(key) != value for key, value in expected.items()):
+        raise ValueError("candidate-result-mismatch")
+    if (head.get("ok") is not True or head.get("sid") != evidence.sid or
+            head.get("canonical_head") != evidence.state.hex() or
+            head.get("counter") != evidence.counter or
+            head.get("last_evidence_id") != evidence.evidence_id().hex()):
+        raise ValueError("registry-head-does-not-match-accepted-candidate")
+    exported = snapshot_at_head(snapshot, evidence.counter, evidence.state.hex())
+    exported.pop("challenge_bound_at_utc", None)
+    exported.update({
+        "iepp_source_revision": git_revision(),
+        "snapshot_source_revision": snapshot.get("iepp_source_revision", "UNKNOWN"),
+        "accepted_evidence_id": evidence.evidence_id().hex(),
+        "accepted_trial_id": candidate["trial_id"],
+        "exported_at_utc": utc_now(),
+        "export_scope": "L1 live-head check; not a VirtualBox snapshot or attestation",
+    })
+    return exported
 
 
 def wait_for_barrier(epoch_ns: int, delay_ms: int) -> None:
@@ -151,7 +237,7 @@ def prepare_workspace(workspace: Path, sid: str, domain: str, key_id: str,
         "iepp_source_revision": revision,
     }
     write_json(enrollment_path, enrollment)
-    write_json(snapshot_path, snapshot)
+    write_private_snapshot(snapshot_path, snapshot)
     store = SQLiteCanonicalStore(database)
     store.enroll(sid, initial)
     store.close()
@@ -200,7 +286,8 @@ def build_candidate(snapshot: dict, branch_id: str, trial_id: str, case_id: str,
         "snapshot_point": snapshot["snapshot_point"],
         "challenge_issued_before_restore": snapshot["snapshot_point"] == "AFTER_CHALLENGE",
         "public_key_fingerprint_sha256": snapshot["public_key_fingerprint_sha256"],
-        "iepp_source_revision": snapshot["iepp_source_revision"],
+        "iepp_source_revision": git_revision(),
+        "snapshot_source_revision": snapshot.get("iepp_source_revision", "UNKNOWN"),
         "created_at_utc": utc_now(),
         "evidence": evidence_to_dict(evidence),
     }
@@ -234,6 +321,31 @@ def cmd_bind_challenge(args: argparse.Namespace) -> int:
     write_json(target, snapshot)
     print(json.dumps({"snapshot": str(target), "snapshot_point": "AFTER_CHALLENGE",
                       "challenge_id": snapshot["challenge"]["challenge_id"]}, indent=2))
+    return 0
+
+
+def cmd_export_snapshot(args: argparse.Namespace) -> int:
+    target = Path(args.output)
+    if target.exists():
+        raise SystemExit("refusing-to-replace-snapshot")
+    try:
+        snapshot = json.loads(Path(args.snapshot).read_text(encoding="utf-8"))
+        candidate = json.loads(Path(args.candidate).read_text(encoding="utf-8"))
+        rows = [json.loads(line) for line in Path(args.log).read_text(encoding="utf-8").splitlines()
+                if line.strip()]
+        matches = [row for row in rows if row.get("evidence_id") == candidate["evidence"]["evidence_id"]]
+        if len(matches) != 1:
+            raise ValueError("exactly-one-matching-result-required")
+        query = urlencode({"sid": snapshot["sid"]})
+        head = http_json(args.registry_url.rstrip("/") + "/v1/head?" + query)
+        exported = accepted_snapshot(snapshot, candidate, matches[0], head)
+        write_private_snapshot(target, exported)
+    except (KeyError, TypeError, ValueError, OSError, RuntimeError) as error:
+        raise SystemExit(f"snapshot-export-failed: {error}") from error
+    print(json.dumps({"snapshot": str(target), "counter": exported["counter"],
+                      "canonical_head": exported["canonical_head"],
+                      "accepted_evidence_id": exported["accepted_evidence_id"],
+                      "iepp_source_revision": exported["iepp_source_revision"]}, indent=2))
     return 0
 
 
@@ -279,6 +391,7 @@ def cmd_submit(args: argparse.Namespace) -> int:
         "challenge_issued_before_restore": candidate["challenge_issued_before_restore"],
         "public_key_fingerprint_sha256": candidate["public_key_fingerprint_sha256"],
         "iepp_source_revision": candidate["iepp_source_revision"],
+        "snapshot_source_revision": candidate.get("snapshot_source_revision", "UNKNOWN"),
         "host": platform.node(),
         "runtime_version": platform.python_version(),
         "challenge_id": evidence["challenge_id"],
@@ -293,6 +406,7 @@ def cmd_submit(args: argparse.Namespace) -> int:
         "transport_ok": transport_ok,
         "transport_error": transport_error,
         "registry_reason": decision.get("reason"),
+        "registry_timing": decision.get("registry_timing"),
         "canonical_accept": accepted,
         "canonical_head_before": decision.get("canonical_head_before"),
         "canonical_head_after": decision.get("canonical_head_after"),
@@ -376,6 +490,14 @@ def parser() -> argparse.ArgumentParser:
     bind.add_argument("--ttl", type=int, default=900)
     bind.add_argument("--output")
     bind.set_defaults(func=cmd_bind_challenge)
+
+    export = commands.add_parser("export-snapshot", help="save verified accepted state to a NEW lab snapshot")
+    export.add_argument("--snapshot", required=True)
+    export.add_argument("--candidate", required=True)
+    export.add_argument("--log", required=True)
+    export.add_argument("--registry-url", required=True)
+    export.add_argument("--output", required=True)
+    export.set_defaults(func=cmd_export_snapshot)
 
     candidate = commands.add_parser("candidate", help="sign one branch's candidate transition")
     candidate.add_argument("--snapshot", required=True)

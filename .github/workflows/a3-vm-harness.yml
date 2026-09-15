@@ -24,7 +24,7 @@ jobs:
         run: python -m py_compile a3_registry.py a3_registry_server.py a3_vm_runner.py a3_safe_resume_demo.py
       - name: Run A3 signed fork tests
         working-directory: reference/iepp_vnext
-        run: python -m unittest discover -s tests -p 'test_a3_vm_runner.py' -v
+        run: python -m unittest discover -s tests -p 'test_a3*.py' -v
       - name: Run one-command safe-resume integration demo
         working-directory: reference/iepp_vnext
         run: >-
