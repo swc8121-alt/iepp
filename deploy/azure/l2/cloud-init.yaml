@@ -1,0 +1,18 @@
+#cloud-config
+package_update: true
+packages:
+  - git
+  - jq
+  - python3-pip
+  - python3-venv
+  - tpm2-tools
+
+runcmd:
+  - [mkdir, -p, /opt/iepp-l2]
+  - [git, clone, --depth, '1', --branch, '__IEPP_GIT_REF__', 'https://github.com/swc8121-alt/iepp.git', /opt/iepp-l2/iepp]
+  - [git, clone, 'https://github.com/Azure/cvm-attestation-tools.git', /opt/cvm-attestation-tools]
+  - [git, -C, /opt/cvm-attestation-tools, checkout, '__ATTESTATION_COMMIT__']
+  - [python3, -m, venv, /opt/iepp-l2/venv]
+  - [/opt/iepp-l2/venv/bin/pip, install, -r, /opt/iepp-l2/iepp/requirements.txt]
+  - [/opt/iepp-l2/venv/bin/pip, install, -r, /opt/cvm-attestation-tools/cvm-attestation/requirements.txt]
+  - [touch, /opt/iepp-l2/CLOUD_INIT_READY]
