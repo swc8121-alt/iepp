@@ -32,7 +32,7 @@ For the shortest professional path through the current work:
 ## Status
 
 - Research specification: v0.2.1 working draft
-- Experimental evidence: software-only simulations
+- Experimental evidence: L1 software experiments plus controlled VirtualBox/two-VM A3 runs; no hardware attestation
 - Production readiness: not production ready
 - Formal security proof: not established
 - Patent status: PCT application filed
@@ -98,7 +98,7 @@ Platform Trust
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
 | Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
 | Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
-| A3 safe-resume demo | [`docs/A3_VirtualBox_Runbook_KO.md`](docs/A3_VirtualBox_Runbook_KO.md) | Signed same-credential fork race over an HTTP registry, plus the 2-VM execution procedure |
+| A3 safe-resume demo | [`docs/A3_VirtualBox_Runbook_KO.md`](docs/A3_VirtualBox_Runbook_KO.md) | Signed same-credential fork/rollback procedure over an HTTP registry |\n| A3 evidence report | [`docs/A3_Evidence_Report_2026-09-20_KO.md`](docs/A3_Evidence_Report_2026-09-20_KO.md) | Actual VirtualBox restore evidence plus independently audited 22- and 220-trial two-VM race batches |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -120,7 +120,7 @@ Platform Trust
 | v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 | v0.2.1 integrated durability prototype | F00-F12 deterministic cases completed | Supplemental single-host observation; not a general crash-consistency or production claim |
-| A3 signed safe-resume loopback | 0 double accepts in 100 mixed challenge races | One online HTTP registry accepted exactly one signed successor and one cooperative simulated action per race; this was not a VirtualBox run |
+| A3 signed safe-resume loopback | 0 double accepts in 100 mixed challenge races | One online HTTP registry accepted exactly one signed successor and one cooperative simulated action per race; this was not a VirtualBox run |\n| A3 actual VirtualBox restore | P1→P2 accepted; restored stale P1 blocked | In the captured L1 run, a validly signed candidate from restored P1 was rejected as `ROLLBACK_OR_LOSING_FORK` after the registry had advanced to P2; operator-collected VM evidence, not hypervisor attestation |\n| A3 two-VM race batch | 220 / 220 trials preserved one accepted successor; 0 double accepts | Fresh/shared two-worker races on one online registry; 66/220 had overlapping observed server-processing intervals; no per-trial VM restore |
 | Entropy-field ablation | 0 replay false accepts / 10,000; 0 double accepts / 1,000 races | Removing entropy fields did not change the tested serialization outcomes |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
