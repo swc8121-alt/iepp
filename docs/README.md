@@ -20,6 +20,10 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
+## Critical review
+
+- [아스트라 반례 검토, 2026-09-21~22](IEPP_Astra_Negative_Review_2026-09_KO.md): 당시 보고된 로컬 시험, 원본성 주장에 대한 반례, 재현 자료의 부재와 L1 경계.
+
 ## Dated experiment evidence
 
 - [A3 VirtualBox observations, 2026-09-14](../experiments/a3-virtualbox-2026-09-14/README.md): raw result logs, Korean report, hashes, limitations and the next-stage plan. This package is partial L1 evidence and does not revise the normative claim boundary.
