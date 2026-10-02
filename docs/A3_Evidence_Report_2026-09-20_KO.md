@@ -10,6 +10,19 @@ A3의 질문은 다음과 같이 좁게 정의한다.
 
 현재 공개 claim은 **L1 single online registry + cooperative simulated policy gate** 범위다.
 
+### 1.1 자료 식별과 비대체 원칙
+
+이 보고서는 성질이 다른 세 자료를 구분한다.
+
+| 자료 ID | 자료 | 허용되는 해석 |
+|---|---|---|
+| `A3-R1` | 실제 VirtualBox restore 공개 bundle, SHA-256 `0e35e44973c0476fd8423d056e5d7c632a92eba4a951bf3001ec2affe77fc453` | 포착된 한 L1 복원 경로에서 stale 제출 차단 |
+| `A3-B22` | batch-02 22회 공개 bundle, SHA-256 `2dc8dceae038b7d1ffe680746da528a5004449ae0d174a34717070185e03daf2` | 두 작업자 경쟁 준비 배치; 매 trial VM restore 아님 |
+| `A3-B220` | batch-03 220회 공개 bundle, SHA-256 `66b4f0d759d1b23cac6dbf25a502b08b912863c1602e0d5a3a07ea5e04d92a02` | 반복 경쟁 배치; 66/220에서 서버 처리 구간 중첩 관찰 |
+
+세 자료의 시험 횟수와 결과는 서로 합산하거나 대체하지 않는다. 특히 `A3-B220`은 220회의 실제 VM
+복원 시험이 아니며, 2026-09-21~22 Astra 대화에서 별도로 보고된 220회 관찰과도 다른 자료다.
+
 검증한 성질:
 
 - 서명된 transition evidence의 challenge/counter/predecessor/state binding
@@ -118,11 +131,13 @@ Baseline P0→P1의 client result와 registry event는 bundle에 있으나 해�
 - aborted 없음
 - double accept 0
 
-### 4.1 독립 감사 결과
+### 4.1 보관 패키지 재계산 결과
 
-ZIP의 자체 `summary.json`을 신뢰값으로 사용하지 않고, 공개 원본을 다시 계산했다.
+이 보고서를 작성할 때 ZIP의 자체 `summary.json`을 신뢰값으로 사용하지 않고 보관된 공개 원본을 다시
+계산했다. 아래 값은 그 감사 실행의 결과이며, 이후 문서 검토가 전체 서명 검증을 새로 반복했다는 뜻은
+아니다.
 
-| 항목 | 독립 감사 결과 |
+| 항목 | 보관 패키지 재계산 결과 |
 |---|---:|
 | Trial | 220 / 220 일관 |
 | Candidate | 440 |
