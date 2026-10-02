@@ -22,7 +22,7 @@ These are working drafts. They guide implementation and experiments but do not y
 
 ## Critical review
 
-- [아스트라 반례 검토, 2026-09-21~22](IEPP_Astra_Negative_Review_2026-09_KO.md): 당시 보고된 로컬 시험, 원본성 주장에 대한 반례, 재현 자료의 부재와 L1 경계.
+- [아스트라 반례 검토, 2026-09-21~22](IEPP_Astra_Negative_Review_2026-09_KO.md): 대화 기반 보고와 해당 실행 원시 증거의 미연결 상태, 원본성 주장에 대한 반례, 별도 A3 보관 증거 및 L1 경계.
 
 ## Dated experiment evidence
 
@@ -50,6 +50,8 @@ This table is a navigation aid rather than a ladder of increasingly proven claim
 - Statistical results must not be described as canonical identity decisions.
 - Hardware-backed claims require hardware-backed tests and an identified evidence level.
 - Migration and recovery must be visible, auditable policy events.
+- “Execution lineage” means a lineage of registry-approved records, not proof that one process executed continuously.
+- Requiring recovery to be an auditable policy event does not establish that safe post-compromise recovery has been demonstrated.
 
 ## Planned documents
 
