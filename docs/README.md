@@ -20,7 +20,10 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 
 ## Experimental runbooks
 
-- [`A3_VirtualBox_Runbook_KO.md`](A3_VirtualBox_Runbook_KO.md) — signed same-credential fork/rollback procedure over the HTTP registry and controlled VirtualBox workflow.\n- [`A3_Race_Batch_KO.md`](A3_Race_Batch_KO.md) — two-worker repeated race harness, schedule-quality rules, and evidence-audit procedure.\n- [`A3_Evidence_Report_2026-09-20_KO.md`](A3_Evidence_Report_2026-09-20_KO.md) — actual VirtualBox restore evidence plus independently audited 22- and 220-trial two-VM results.
+- [`A3_VirtualBox_Runbook_KO.md`](A3_VirtualBox_Runbook_KO.md) — signed same-credential fork/rollback procedure over the HTTP registry and controlled VirtualBox workflow.
+- [`A3_Race_Batch_KO.md`](A3_Race_Batch_KO.md) — two-worker repeated race harness, schedule-quality rules, and evidence-audit procedure.
+- [`A3_Evidence_Report_2026-09-20_KO.md`](A3_Evidence_Report_2026-09-20_KO.md) — actual VirtualBox restore evidence plus independently audited 22- and 220-trial two-VM results.
+- [`A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md`](A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md) — exact-package 22-trial actual-VM run, public evidence bundle, independent audit, clone-first negative result, and L1-only interpretation.
 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 

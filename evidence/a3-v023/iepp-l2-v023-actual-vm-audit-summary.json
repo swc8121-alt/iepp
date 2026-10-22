@@ -1,0 +1,52 @@
+{
+  "format": "iepp-l2-v023-independent-audit-v1",
+  "audited_at": "2026-10-22T13:18:19+09:00",
+  "verdict": "PASS_SCOPE_LIMITED",
+  "run_id": "l2-20261022034842-d78a5cb2",
+  "runner_version": "0.2.3",
+  "observation_level": "VM_OBSERVED",
+  "claim_level": "L1_REGISTRY_RELATIVE_CONTINUATION",
+  "evidence": {
+    "bundle": "/evidence/iepp-l2-v023-actual-vm-evidence-20261022.zip",
+    "bundle_sha256": "3ea76709a9db6a8b5d9044ee59a9a72fc275f677bf230e40cfd8d094398b207c",
+    "evidence_chain_head": "0dc34b7d6429ee3d99e9f89cf5dfd0efd360bd409318e81f67ac250510e6f197"
+  },
+  "release": {
+    "package_sha256": "c63e1c516b36a7bc02e768452674accee31dd3b256733ca42ee8394d9f5b7b4d",
+    "runner_sha256": "7af548c5dee3943e16d393cb7d0741cd33d7eb2f318bd1308c7e256f31c6f6ab",
+    "manifest_sha256": "e6edafeb94155f364b7e4bf61ba59ee56e022a82142f50ccf3ad76eddfd80f01",
+    "guest_probe_sha256": "b20dbd3ea6609475051b8e931ac86be26b6877846ecd327515ff899413096080"
+  },
+  "verification": {
+    "files_verified": 3,
+    "trials_verified": 22,
+    "transition_digests_verified": 40,
+    "registry_decisions_verified": 40,
+    "unique_challenges": 36,
+    "expected_exact_replay_duplicates": 4,
+    "snapshot_restores": 36,
+    "vm_starts_ready": 37,
+    "readiness_retry_failures": 311,
+    "unexpected_command_failures": 0
+  },
+  "environment": {
+    "host": "Windows 10.0.19045 x64",
+    "virtualbox": "7.2.16r174877",
+    "guest": "Ubuntu 24.04 LTS; Linux 6.8.0-147-generic x86_64",
+    "guest_additions": "7.2.16",
+    "guest_node": "v22.23.4",
+    "snapshot": "iepp-l2-genesis-b20dbd3ea6-v023",
+    "snapshot_uuid": "974cddc8-1338-4fd5-9c3c-2b22d024d09a",
+    "reused_snapshot": false
+  },
+  "excluded_claims": [
+    "physical or original runtime identity",
+    "clone resistance",
+    "hardware-backed key isolation",
+    "TEE, TPM, or PUF attestation",
+    "distributed-registry consensus",
+    "post-compromise recovery",
+    "independent security advantage from intrinsic entropy",
+    "production readiness"
+  ]
+}

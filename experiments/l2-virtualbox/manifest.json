@@ -1,0 +1,18 @@
+{
+  "format": "iepp-l2-virtualbox-manifest-v1",
+  "runner_version": "0.2.3",
+  "total_trials": 22,
+  "groups": [
+    {"scenario": "baseline_continue", "count": 4, "expected": "CONTINUITY_ACCEPTED"},
+    {"scenario": "rollback_after_accept", "count": 4, "expected": "PREDECESSOR_MISMATCH"},
+    {"scenario": "exact_replay", "count": 4, "expected": "CHALLENGE_REPLAY"},
+    {"scenario": "same_snapshot_fork", "count": 6, "expected": "EXACTLY_ONE_CANONICAL"},
+    {"scenario": "shared_current_credential_clone_first", "count": 4, "expected": "CLONE_CANONICAL_HONEST_REJECTED"}
+  ],
+  "claim_boundary": {
+    "observation_level": "VM_OBSERVED when actual_vm_executed is true; otherwise SIMULATION_ONLY",
+    "security_claim": "L1_REGISTRY_RELATIVE_CONTINUATION",
+    "tests": ["VM snapshot restore", "stale predecessor rejection", "single canonical successor", "shared-credential first-writer limitation"],
+    "does_not_test": ["physical originality", "hardware-backed key isolation", "TEE or PUF attestation", "clone-resistant runtime identity", "production readiness"]
+  }
+}
