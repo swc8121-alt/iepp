@@ -1,0 +1,80 @@
+{
+  "format": "iepp-l2-runner-status-v1",
+  "runner_version": "0.2.3",
+  "updated_at": "2026-10-22T13:18:19+09:00",
+  "status": "ACTUAL_VM_V0_2_3_VERIFIED",
+  "dry_run": {
+    "passed": true,
+    "passed_trials": 22,
+    "total_trials": 22,
+    "integrity_verifier_passed": true,
+    "observation_level": "SIMULATION_ONLY",
+    "claim_level": "L1_REGISTRY_RELATIVE_CONTINUATION"
+  },
+  "actual_vm_executed": true,
+  "final_run": {
+    "run_id": "l2-20261022034842-d78a5cb2",
+    "generated_at": "2026-10-22T04:10:44.906Z",
+    "runner_identity": "v0.2.3-exact-release-source",
+    "actual_vm_executed": true,
+    "observation_level": "VM_OBSERVED",
+    "claim_level": "L1_REGISTRY_RELATIVE_CONTINUATION",
+    "passed_trials": 22,
+    "total_trials": 22,
+    "snapshot_restores_succeeded": 36,
+    "vm_starts_ready": 37,
+    "evidence_zip_sha256": "3ea76709a9db6a8b5d9044ee59a9a72fc275f677bf230e40cfd8d094398b207c",
+    "evidence_chain_head": "0dc34b7d6429ee3d99e9f89cf5dfd0efd360bd409318e81f67ac250510e6f197",
+    "runner_sha256": "7af548c5dee3943e16d393cb7d0741cd33d7eb2f318bd1308c7e256f31c6f6ab",
+    "release_equivalent": true,
+    "integrity_verifier_passed": true,
+    "independent_audit_passed": true
+  },
+  "qualification_run": {
+    "generated_at": "2026-10-21T20:23:03.526Z",
+    "runner_identity": "patched-v0.2.2-working-copy",
+    "actual_vm_executed": true,
+    "passed_trials": 22,
+    "total_trials": 22,
+    "evidence_zip_sha256": "4a9f634b9a8896474c38366a7f7eecbaeef91c7de619bb3faf554cecce261691",
+    "runner_sha256": "1269ed081a51dc386df9967e431aac711ad54b134d9a95c7f509568c46e2b433",
+    "release_equivalent": false,
+    "interpretation": "Superseded as the release gate by the exact v0.2.3 final run; retained as field-fix qualification history."
+  },
+  "artifacts": {
+    "package": "/downloads/iepp-l2-virtualbox-runner-v0.2.3.zip",
+    "package_sha256": "c63e1c516b36a7bc02e768452674accee31dd3b256733ca42ee8394d9f5b7b4d",
+    "runner_sha256": "7af548c5dee3943e16d393cb7d0741cd33d7eb2f318bd1308c7e256f31c6f6ab",
+    "guest_platform_sha256": "ae8694812e52b9051acde6eb37c4acf9fb903ba77967631641c3ed7faea7c6d5",
+    "guest_probe_sha256": "b20dbd3ea6609475051b8e931ac86be26b6877846ecd327515ff899413096080",
+    "manifest_sha256": "e6edafeb94155f364b7e4bf61ba59ee56e022a82142f50ccf3ad76eddfd80f01",
+    "windows_launcher_sha256": "dd01cbec909bdc9defcb1d9fd75123888307d2b72521a55b0c1d2072dbfcdb3b",
+    "evidence_bundle": "/evidence/iepp-l2-v023-actual-vm-evidence-20261022.zip",
+    "evidence_bundle_sha256": "3ea76709a9db6a8b5d9044ee59a9a72fc275f677bf230e40cfd8d094398b207c",
+    "independent_audit": "/evidence/iepp-l2-v023-actual-vm-audit-summary.json"
+  },
+  "supported_guest_os": ["Ubuntu/Linux", "Windows"],
+  "resolved_runner_issues": [
+    "v0.2.0 stopped before any VM trial because Windows PowerShell 5.1 misread the UTF-8 source encoding.",
+    "v0.2.1 assumed Windows guest paths and could not run against the existing Ubuntu IEPP-Node VMs.",
+    "v0.2.2 duplicated the guest Node executable in guestcontrol argv.",
+    "v0.2.2 used a copyto target-directory form that failed in the qualified environment.",
+    "v0.2.2 allowed only 60 seconds for Guest Additions and guest Node readiness; v0.2.3 allows 180 seconds and labels retryable probes.",
+    "v0.2.3 detects both /usr/bin/node and /snap/node/current/bin/node and creates a release-versioned genesis snapshot."
+  ],
+  "claim_boundary": {
+    "observation_level": "VM_OBSERVED snapshot orchestration was verified on the declared VirtualBox environment.",
+    "security_claim": "L1_REGISTRY_RELATIVE_CONTINUATION only.",
+    "excluded": [
+      "physical or original runtime identity",
+      "clone resistance",
+      "hardware-backed key isolation",
+      "TEE, TPM, or PUF attestation",
+      "distributed-registry consensus",
+      "post-compromise recovery",
+      "independent security advantage from intrinsic entropy",
+      "production readiness"
+    ]
+  },
+  "next_evidence_gate": "Complete the remaining A3 matrix: both submission orders, a controlled concurrent race, challenges issued before and after restore, and a network-bound independent registry; keep entropy fault injection in A4."
+}

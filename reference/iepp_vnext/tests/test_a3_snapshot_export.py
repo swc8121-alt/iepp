@@ -164,8 +164,13 @@ class AcceptedSnapshotTests(unittest.TestCase):
                         "decision_monotonic_ns"]
                 times = [t[k] for k in keys]
                 self.assertEqual(times, sorted(times))
-            self.assertLess(max(t["verification_requested_monotonic_ns"] for t in timings),
-                            min(t["decision_monotonic_ns"] for t in timings))
+            # Windows monotonic_ns can report equal adjacent samples when the
+            # underlying timer resolution is coarser than one nanosecond. The
+            # barrier proves both requests reached verification before the
+            # decision lock was released, so nondecreasing timestamps are the
+            # portable assertion here.
+            self.assertLessEqual(max(t["verification_requested_monotonic_ns"] for t in timings),
+                                 min(t["decision_monotonic_ns"] for t in timings))
             events = [json.loads(line) for line in (path / "server.jsonl").read_text().splitlines()]
             events = [e for e in events if e["event"].startswith("TRANSITION_")]
             for decision in decisions:
