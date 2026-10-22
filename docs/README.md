@@ -20,6 +20,10 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
 
+## Critical review
+
+- [아스트라 반례 검토, 2026-09-21~22](IEPP_Astra_Negative_Review_2026-09_KO.md): 대화 기반 보고와 해당 실행 원시 증거의 미연결 상태, 원본성 주장에 대한 반례, 별도 A3 보관 증거 및 L1 경계.
+
 ## Dated experiment evidence
 
 - [A3 VirtualBox observations, 2026-09-14](../experiments/a3-virtualbox-2026-09-14/README.md): raw result logs, Korean report, hashes, limitations and the next-stage plan. This package is partial L1 evidence and does not revise the normative claim boundary.
@@ -46,6 +50,8 @@ This table is a navigation aid rather than a ladder of increasingly proven claim
 - Statistical results must not be described as canonical identity decisions.
 - Hardware-backed claims require hardware-backed tests and an identified evidence level.
 - Migration and recovery must be visible, auditable policy events.
+- “Execution lineage” means a lineage of registry-approved records, not proof that one process executed continuously.
+- Requiring recovery to be an auditable policy event does not establish that safe post-compromise recovery has been demonstrated.
 
 ## Planned documents
 
