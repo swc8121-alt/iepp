@@ -32,7 +32,7 @@ For the shortest professional path through the current work:
 ## Status
 
 - Research specification: v0.2.1 working draft
-- Experimental evidence: L1 software experiments and [partial VirtualBox snapshot/fork observations](experiments/a3-virtualbox-2026-09-14/README.md)
+- Experimental evidence: L1 software experiments and [two-VM VirtualBox snapshot/restore observations](experiments/a3-virtualbox-2026-10-27/README.md)
 - Production readiness: not production ready
 - Formal security proof: not established
 - Patent status: PCT application filed
@@ -108,6 +108,8 @@ Platform Trust
 
 ## Current experimental evidence
 
+**27 October 2026 — [A3 two-VM evidence package](experiments/a3-virtualbox-2026-10-27/README.md):** a fixed 22-trial matrix ran against two distinct Ubuntu VMs and a separate HTTP registry process. All 22 trials met their scenario predicates. Eight controlled races had server-processing overlap, exactly one accepted successor, and no overlapping CAS critical interval. The package records 42 registry decisions and 46 successful snapshot restores. This remains an L1 registry-relative harness observation: guest candidates were not cryptographically authenticated, the registry was single and local, and no originality, clone-resistance, hardware, or distributed-safety claim is made. [한국어 증거 검토](experiments/a3-virtualbox-2026-10-27/EVIDENCE_REVIEW_KO.md) · [Runner](experiments/a3-virtualbox-2026-10-27/runner/README_KO.md).
+
 **14 September 2026 — [A3 VirtualBox evidence package](experiments/a3-virtualbox-2026-09-14/README.md):** four paired trials each recorded one accepted successor, and a separate actual VM rollback submission was rejected (nine client records total). The shared-challenge serial case also matches the supplied server log. This is partial L1 coverage; controlled server-side overlap, the complete A3 matrix and hardware-backed L2 remain unvalidated. [한국어 보고서](experiments/a3-virtualbox-2026-09-14/REPORT_KO.md) · [Next-stage plan](experiments/a3-virtualbox-2026-09-14/NEXT_STAGE_KO.md).
 
 | Observation | Reported result | Correct interpretation |
@@ -122,6 +124,7 @@ Platform Trust
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 | v0.2.1 integrated durability prototype | F00-F12 deterministic cases completed | Supplemental single-host observation; not a general crash-consistency or production claim |
 | Entropy-field ablation | 0 replay false accepts / 10,000; 0 double accepts / 1,000 races | Removing entropy fields did not change the tested serialization outcomes |
+| A3 two-VM harness | 22 / 22 trials; 8 / 8 overlapping races with one accept | Snapshot/restore orchestration and single-registry semantics; unsigned guests and no hardware/originality claim |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 

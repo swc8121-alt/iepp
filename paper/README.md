@@ -16,4 +16,4 @@ Upload `iepp_arxiv_v1.tex` and `references.bib` to arXiv. The generated PDF is a
 
 ## Claim boundary
 
-The paper reports only merged and reproducible L1 evidence from the public repository. It does not treat open pull requests, roadmap items, L2--L4 mechanisms, entropy quality, distributed safety, or post-complete-compromise security as established results.
+The paper reports only merged and reproducible L1 evidence from the public repository. The authenticated Python reference profile and the supplemental two-VM Node.js harness are identified separately: the latter tests snapshot/restore orchestration and single-registry semantics with unsigned guest candidates. The paper does not treat open pull requests, roadmap items, L2--L4 mechanisms, entropy quality, runtime originality, clone resistance, distributed safety, or post-complete-compromise security as established results.

@@ -1,0 +1,45 @@
+{
+  "format": "iepp-a3-evidence-review-v1",
+  "review_date": "2026-10-27",
+  "archive": {
+    "file": "evidence-vm-20261027-140157.zip",
+    "size_bytes": 42172,
+    "sha256": "1918b5e44f66de5a0e31db67eb0a5bd35911cea0ec7fd5a2ccc720bd26779f54",
+    "entries": 7,
+    "unsafe_paths": 0
+  },
+  "runner_version": "0.2.4.2",
+  "run_id": "a3-20261027050157-222dfc76",
+  "claim_level": "L1_REGISTRY_RELATIVE_CONTINUATION",
+  "observation_level": "TWO_VM_OBSERVED",
+  "checks": {
+    "bundled_verifier_ok": true,
+    "manifested_file_hashes_match": true,
+    "evidence_chain_matches": true,
+    "scenario_semantics_recomputed": true,
+    "scenario_semantics_passed": 22,
+    "scenario_semantics_total": 22,
+    "registry_events_match_embedded_server_fields": true,
+    "source_hashes_match_runner": true,
+    "known_plaintext_secret_pattern_found": false
+  },
+  "counts": {
+    "trials": 22,
+    "passed_trials": 22,
+    "registry_events": 42,
+    "race_trials": 8,
+    "server_processing_overlap_trials": 8,
+    "single_accept_race_trials": 8,
+    "cas_overlap_trials": 0,
+    "successful_snapshot_restores": 46
+  },
+  "evidence_chain_head": "947895864ebc515e2a769029683919430fee33a3ff6c86f2f198a7c04f51fe29",
+  "excluded_claims": [
+    "runtime originality",
+    "clone resistance",
+    "hardware identity or attestation",
+    "cryptographic guest authentication",
+    "distributed consensus",
+    "independent entropy benefit"
+  ]
+}
