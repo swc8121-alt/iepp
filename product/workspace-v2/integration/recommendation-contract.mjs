@@ -19,6 +19,23 @@ const TEMPLATES = Object.freeze({
       ['draft', 'sources', 'writing', '콘텐츠 초안 작성 및 사용자 검토'],
     ],
   },
+  youtube: {
+    title: '유튜브 콘텐츠 제작 스튜디오',
+    roles: [
+      ['lead', null, '콘텐츠 총괄 AI', '채널 콘셉트, 작업 분배, 품질 검토, 승인 대기 상태를 정리합니다.', '채널 기획서 · 최종 검토표'],
+      ['research', 'lead', '트렌드 조사 AI', '공개 자료의 출처와 조사 시각을 구분해 주제 후보를 정리합니다. 검색 연결이 없다면 실제 트렌드 확인을 주장하지 않습니다.', '주제 후보 10개 · 출처 목록'],
+      ['writing', 'lead', '대본 작성 AI', '확인된 자료를 근거로 일반 영상 2편 및 쇼츠 4편의 대본 초안을 작성합니다.', '대본 6개 · 장면 구성표'],
+      ['production', 'lead', '제작·운영 AI', '촬영·편집 체크리스트와 제목·썸네일 문구를 제안합니다. 유튜브 업로드는 수행하지 않습니다.', '촬영·편집 지시서 · 게시 준비 자료'],
+    ],
+    tasks: [
+      ['scope', null, 'lead', '채널 콘셉트 후보 3개와 타깃 시청자 검토'],
+      ['research', 'scope', 'research', '콘텐츠 아이디어 10개와 확인 가능한 출처 조사'],
+      ['scripts', 'research', 'writing', '일반 영상 2편·쇼츠 4편 대본 초안 작성'],
+      ['production', 'scripts', 'production', '촬영·편집 지시서와 제목·썸네일 문구 준비'],
+      ['review', 'production', 'lead', '사실관계·저작권 검토와 사용자 게시 결정 요청'],
+      ['analysis', 'review', 'lead', '게시 후 실제 관측 지표를 이용한 성과 보고 초안'],
+    ],
+  },
   business: {
     title: '1인 사업 운영 프로젝트',
     roles: [
@@ -112,7 +129,7 @@ export function buildPendingRecommendation({
       // One supported lineage catalog entry. This does NOT establish a new connection.
       connections: ['iepp-lineage'],
     },
-    explanation: '목표에 맞춘 역할 3개와 작업 초안 3개입니다. 웹 화면에서 내용을 검토한 후 사용자가 직접 프로젝트를 생성해야 합니다. 에이전트 실행 및 외부 작업은 수행하지 않았습니다.',
+    explanation: `목표에 맞춘 AI 역할 ${preset.roles.length}개와 작업 초안 ${preset.tasks.length}개입니다. 실제 프로젝트 등록 전 사용자가 웹 화면에서 검토해야 합니다. 에이전트 실행·영상 게시·외부 작업은 수행하지 않았습니다.`,
     model_label: actualModel,
   };
 }
