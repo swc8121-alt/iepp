@@ -5,7 +5,7 @@ A general customer should understand **"Organize a project, set up an AI team, a
 
 ## Included
 - Korean goal-first landing page with direct text entry and three starter scenarios (content creator, solo business, research).
-- Two-step guided preview: goal/project name and template → a three-role AI team plus three draft tasks.
+- Two-step guided preview: goal/project name and template → an AI team and draft tasks. General presets contain 3 roles/3 tasks; YouTube preset contains 4 roles/6 tasks.
 - Demo-only project creation that updates project, agent, and task views **within the browser's in-memory state**; the plan is lost after reload.
 - Clear navigation: Home / Projects / AI Team / Tasks / Records & Verification. Existing lineage and alert pages remain available.
 - Explicit indication of what is **demo/example data**, not live verification or execution.
