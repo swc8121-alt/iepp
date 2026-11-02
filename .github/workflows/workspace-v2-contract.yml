@@ -1,0 +1,29 @@
+name: IEPP Workspace v2 Contract Tests
+
+on:
+  pull_request:
+    paths:
+      - 'product/workspace-v2/**'
+      - '.github/workflows/workspace-v2-contract.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  workspace-v2-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Check module syntax
+        run: |
+          node --check product/workspace-v2/integration/recommendation-contract.mjs
+          node --check product/workspace-v2/integration/recommendation-bridge.mjs
+          node --check product/workspace-v2/integration/recommendation-bridge.test.mjs
+      - name: Test template and pending-recommendation boundaries
+        run: node --test product/workspace-v2/integration/*.test.mjs
