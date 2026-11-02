@@ -96,3 +96,10 @@ test('template choice follows stated intent, not an imagined trend ranking',()=>
   assert.equal(chooseTemplate('사업 운영 계획'),'business');
   assert.equal(chooseTemplate('기타 글쓰기'),'creator');
 });
+
+test('empty save response never becomes an acknowledged project recommendation',async()=>{
+  const r=rig();
+  r.savePending=async (payload)=>{r.calls.save.push(payload);return {};};
+  await assert.rejects(submitForHumanReview({...opts,...r}),/did not acknowledge/);
+  assert.equal(r.calls.save.length,1);
+});
