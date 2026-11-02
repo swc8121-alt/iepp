@@ -76,7 +76,7 @@ export async function submitForHumanReview({
   // create_project, approve_task, agent execution, publishing or billing.
   const response = await savePending(payload);
   if (response == null || typeof response !== 'object' ||
-      response.isError === true || response.ok === false || response.error) {
+      response.isError === true || response.ok !== true || response.error) {
     throw invalid('The provider did not acknowledge saving a pending recommendation');
   }
 
