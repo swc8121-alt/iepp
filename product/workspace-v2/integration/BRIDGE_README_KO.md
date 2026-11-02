@@ -38,3 +38,6 @@ const result = await submitForHumanReview({
 `node --test recommendation-contract.test.mjs recommendation-bridge.test.mjs`
 
 도구의 읽기/쓰기 인터페이스를 모의로 주입하여 성공·실패·권한·revision·프롬프트 주입 경계를 검증한다. **실제 사이트 연결 시험은 아직 수행하지 않았다.**
+## 운영 연결의 성공 응답 규칙
+
+실제 Site 연결 코드는 `save_project_recommendation`의 원시 응답을 확인하여 **검토 대기 초안 저장이 성공했을 때만** `savePending`에서 `{ok:true}`를 반환해야 한다. 오류, 응답 누락, 응답 형식 미확인은 실패로 처리한다. 실제 원시 응답 형태를 보지 못한 상태에서 성공으로 추정하지 않는다.
