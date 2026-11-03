@@ -25,5 +25,7 @@ jobs:
           node --check product/workspace-v2/integration/recommendation-contract.mjs
           node --check product/workspace-v2/integration/recommendation-bridge.mjs
           node --check product/workspace-v2/integration/recommendation-bridge.test.mjs
+          node --check product/workspace-v2/billing/billing-sandbox.mjs
+          node --check product/workspace-v2/billing/billing-sandbox.test.mjs
       - name: Test template and pending-recommendation boundaries
-        run: node --test product/workspace-v2/integration/*.test.mjs
+        run: node --test product/workspace-v2/integration/*.test.mjs product/workspace-v2/billing/*.test.mjs
