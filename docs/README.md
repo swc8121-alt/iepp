@@ -18,7 +18,18 @@ Readers encountering IEPP for the first time should begin with [`IEPP_Research_E
 4. [`IEPP_Public_Evidence_Boundary_v0.2.1.md`](IEPP_Public_Evidence_Boundary_v0.2.1.md)
    Public claim boundary, supplemental durability observations, and deliberately non-public operational material.
 
+## Experimental runbooks
+
+- [`A3_VirtualBox_Runbook_KO.md`](A3_VirtualBox_Runbook_KO.md) — signed same-credential fork/rollback procedure over the HTTP registry and controlled VirtualBox workflow.
+- [`A3_Race_Batch_KO.md`](A3_Race_Batch_KO.md) — two-worker repeated race harness, schedule-quality rules, and evidence-audit procedure.
+- [`A3_Evidence_Report_2026-09-20_KO.md`](A3_Evidence_Report_2026-09-20_KO.md) — actual VirtualBox restore evidence plus independently audited 22- and 220-trial two-VM results.
+- [`A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md`](A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md) — exact-package 22-trial actual-VM run, public evidence bundle, independent audit, clone-first negative result, and L1-only interpretation.
+
 These are working drafts. They guide implementation and experiments but do not yet define a stable interoperable wire protocol.
+
+## Critical review
+
+- [아스트라 반례 검토, 2026-09-21~22](IEPP_Astra_Negative_Review_2026-09_KO.md): 대화 기반 보고와 해당 실행 원시 증거의 미연결 상태, 원본성 주장에 대한 반례, 별도 A3 보관 증거 및 L1 경계.
 
 ## Dated experiment evidence
 
@@ -46,6 +57,8 @@ This table is a navigation aid rather than a ladder of increasingly proven claim
 - Statistical results must not be described as canonical identity decisions.
 - Hardware-backed claims require hardware-backed tests and an identified evidence level.
 - Migration and recovery must be visible, auditable policy events.
+- “Execution lineage” means a lineage of registry-approved records, not proof that one process executed continuously.
+- Requiring recovery to be an auditable policy event does not establish that safe post-compromise recovery has been demonstrated.
 
 ## Planned documents
 

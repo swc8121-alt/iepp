@@ -1,0 +1,38 @@
+{
+  "format": "iepp-a3-virtualbox-manifest-v1",
+  "runner_version": "0.2.4.2",
+  "total_trials": 22,
+  "groups": [
+    {"scenario": "r1_baseline_continue", "count": 2, "expected": "CONTINUITY_ACCEPTED"},
+    {"scenario": "r2_fresh_order_ab", "count": 3, "expected": "A_ACCEPTED_B_FORK_REJECTED"},
+    {"scenario": "r3_fresh_order_ba", "count": 3, "expected": "B_ACCEPTED_A_FORK_REJECTED"},
+    {"scenario": "r4_controlled_race_fresh", "count": 4, "expected": "ONE_ACCEPTED_ONE_FORK_REJECTED"},
+    {"scenario": "r5_shared_challenge_ab", "count": 2, "expected": "A_ACCEPTED_B_CHALLENGE_REPLAY"},
+    {"scenario": "r6_shared_challenge_ba", "count": 2, "expected": "B_ACCEPTED_A_CHALLENGE_REPLAY"},
+    {"scenario": "r7_controlled_race_shared_challenge", "count": 4, "expected": "ONE_ACCEPTED_ONE_CHALLENGE_REPLAY"},
+    {"scenario": "r8_consumed_before_restore", "count": 2, "expected": "PRE_RESTORE_ACCEPTED_POST_RESTORE_FORK_REJECTED"}
+  ],
+  "race_delay_profiles_ms": [[0, 0], [0, 5], [5, 0], [0, 10]],
+  "claim_boundary": {
+    "observation_level": "TWO_VM_OBSERVED only when actual_vm_executed is true; otherwise SIMULATION_ONLY",
+    "security_claim": "L1_REGISTRY_RELATIVE_CONTINUATION",
+    "tests": [
+      "two independent guest state producers",
+      "symmetric A-to-B and B-to-A ordering",
+      "server-observed overlapping HTTP request intervals",
+      "atomic single canonical successor",
+      "single-use challenge handling",
+      "challenge consumption before snapshot restoration"
+    ],
+    "does_not_test": [
+      "physical or original runtime identity",
+      "clone resistance",
+      "hardware-backed key isolation",
+      "TEE or PUF attestation",
+      "distributed consensus",
+      "recovery governance",
+      "independent security value from entropy",
+      "production readiness"
+    ]
+  }
+}

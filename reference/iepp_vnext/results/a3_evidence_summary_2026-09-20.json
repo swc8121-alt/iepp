@@ -1,0 +1,63 @@
+{
+  "schema": "iepp-a3-evidence-summary-v1",
+  "report_date": "2026-09-20",
+  "claim_scope": "L1 single online registry; cooperative simulated policy gate",
+  "actual_vm_restore": {
+    "artifact_name": "A3-actual-vm-restore-public-evidence-01.zip",
+    "sha256": "0e35e44973c0476fd8423d056e5d7c632a92eba4a951bf3001ec2affe77fc453",
+    "source_revision": "f2ab3b08ee26fb303e95e5032b00dc867ebf4078",
+    "p0": "580e7f38f7f95814aee7b3d171bd21e284149e6e53ae265211a17142906174f5",
+    "p1": "2ec90523d62ef63b983426f582fb1a04b6bbe1b8aeecc980793176dceeef2865",
+    "p2": "c0e56573aca8c749fa6e0590ef8c5c4be222dbb64b5bb6b7126ec9b78aba6238",
+    "stale_restore_reason": "ROLLBACK_OR_LOSING_FORK",
+    "stale_restore_protected_action": "BLOCKED",
+    "server_instance_id": "76fd48e0390141fa987c1432b5655463",
+    "virtualbox_snapshot_name": "A3_P1_ACCEPTED_RESTORE_01",
+    "virtualbox_snapshot_uuid": "c17deb99-ecab-4251-af92-7a46abbdd944",
+    "limitation": "operator-collected VirtualBox evidence; not hypervisor cryptographic attestation; baseline candidate JSON absent from bundle"
+  },
+  "race_22": {
+    "artifact_sha256": "2dc8dceae038b7d1ffe680746da528a5004449ae0d174a34717070185e03daf2",
+    "planned": 22,
+    "passed_trials": 22,
+    "schedule_quality_ok_trials": 22,
+    "overlap_trials": 8,
+    "double_accepts": 0,
+    "actual_vm_restore_per_trial": false
+  },
+  "race_220": {
+    "artifact_sha256": "66b4f0d759d1b23cac6dbf25a502b08b912863c1602e0d5a3a07ea5e04d92a02",
+    "source_revision": "f9848ae8cd7b4db6c90634b565205b3df9da8a39",
+    "planned": 220,
+    "passed_trials": 220,
+    "fresh_trials": 110,
+    "shared_trials": 110,
+    "winners": {
+      "A": 112,
+      "B": 108
+    },
+    "signatures_verified": 440,
+    "evidence_ids_recomputed": 440,
+    "state_hashes_recomputed": 440,
+    "transports_ok": 440,
+    "accepted": 220,
+    "rejected": 220,
+    "executed_simulated": 220,
+    "blocked": 220,
+    "fresh_loser_rollback_or_losing_fork": 110,
+    "shared_loser_challenge_used": 110,
+    "final_heads_verified": 220,
+    "double_accepts": 0,
+    "schedule_quality_ok_trials": 220,
+    "overlap_trials": 66,
+    "unique_trial_public_keys": 220,
+    "unique_initial_states": 220,
+    "unique_challenges": 330,
+    "unique_evidence": 440,
+    "unique_entropy_commitments": 440,
+    "max_send_lateness_ms_approx": 18.29,
+    "max_clock_rtt_ms_approx": 11.26,
+    "snapshot_source_revision": "UNKNOWN",
+    "actual_vm_restore_per_trial": false
+  }
+}
