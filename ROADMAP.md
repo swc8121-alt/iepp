@@ -33,20 +33,25 @@ Status: In progress
 - automated replay, rollback, and fork tests;
 - machine-readable result manifests.
 
-Current evidence: an L1 in-memory core, durable compare-and-swap component, machine-readable manifests, and bounded
-F00-F12 single-host observations exist. Full crash-consistent integration and independent reproduction remain open.
+Current evidence: an L1 in-memory core, durable compare-and-swap component, machine-readable manifests, a signed
+HTTP safe-resume loopback race, and bounded F00-F12 single-host observations exist. Full crash-consistent integration,
+physical 2-VM execution, and independent reproduction remain open.
 
 Exit criterion: clean installation and repeatable tests on at least two independent environments.
 
 ## M4 — Adversarial runtime validation
 
-Status: Planned
+Status: In progress
 
 - VM snapshot and simultaneous fork race;
 - storage and process rollback;
 - RNG freeze, substitution, and degradation;
 - stale registry write and split-view simulation;
 - authorized migration versus unauthorized clone.
+
+Current evidence: the signed HTTP-registry loopback harness covers two same-credential successor races (fresh
+post-restore challenges and a shared pre-restore challenge). The documented VirtualBox 2-VM run, rollback-resistant
+challenge storage, and hostile-runtime tests remain open.
 
 Exit criterion: limitations and detection behavior are documented for every attack class.
 

@@ -32,7 +32,7 @@ For the shortest professional path through the current work:
 ## Status
 
 - Research specification: v0.2.1 working draft
-- Experimental evidence: L1 software experiments and [partial VirtualBox snapshot/fork observations](experiments/a3-virtualbox-2026-09-14/README.md)
+- Experimental evidence: L1 software experiments, archived A3 race batches, an exact-package v0.2.3 actual-VM run, and a later [two-VM VirtualBox snapshot/restore observation](experiments/a3-virtualbox-2026-10-27/README.md); no hardware attestation
 - Production readiness: not production ready
 - Formal security proof: not established
 - Patent status: PCT application filed
@@ -98,6 +98,9 @@ Platform Trust
 | Threat analysis | [`docs/IEPP_Threat_Model_v0.1.md`](docs/IEPP_Threat_Model_v0.1.md) | Trust assumptions, adversaries, attack games, limitations |
 | Core validation | [`docs/IEPP_Core_Validation_v0.2.md`](docs/IEPP_Core_Validation_v0.2.md) | Positive tests, required negative results, performance, release limits |
 | Reference core | [`reference/iepp_vnext/`](reference/iepp_vnext/) | Ed25519 evidence, one-time challenges, atomic registry, durable CAS tests |
+| A3 safe-resume demo | [`docs/A3_VirtualBox_Runbook_KO.md`](docs/A3_VirtualBox_Runbook_KO.md) | Signed same-credential fork/rollback procedure over an HTTP registry |
+| A3 evidence report | [`docs/A3_Evidence_Report_2026-09-20_KO.md`](docs/A3_Evidence_Report_2026-09-20_KO.md) | One captured VirtualBox restore path plus archived 22- and 220-trial two-VM race batches; no per-trial restore claim |
+| A3 v0.2.3 actual-VM evidence | [`docs/A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md`](docs/A3_VirtualBox_v0.2.3_Evidence_2026-10-22_KO.md) | Exact release package, 22-trial VirtualBox evidence, independent audit, and explicit L1 claim boundary |
 | Documentation index | [`docs/README.md`](docs/README.md) | Current and historical document map |
 | Experiments | [`experiments/README.md`](experiments/README.md) | Reproduction instructions and interpretation rules |
 | v0.3 code | [`experiments/iepp_v03_merged.py`](experiments/iepp_v03_merged.py) | Three-layer trajectory plausibility experiment |
@@ -107,6 +110,8 @@ Platform Trust
 | Security | [`SECURITY.md`](SECURITY.md) | Responsible reporting and current security boundary |
 
 ## Current experimental evidence
+
+**27 October 2026 — [A3 two-VM evidence package](experiments/a3-virtualbox-2026-10-27/README.md):** a fixed 22-trial matrix ran against two distinct Ubuntu VMs and a separate HTTP registry process. All 22 trials met their scenario predicates. Eight controlled races had server-processing overlap, exactly one accepted successor, and no overlapping CAS critical interval. The package records 42 registry decisions and 46 successful snapshot restores. This remains an L1 registry-relative harness observation: guest candidates were not cryptographically authenticated, the registry was single and local, and no originality, clone-resistance, hardware, or distributed-safety claim is made. [한국어 증거 검토](experiments/a3-virtualbox-2026-10-27/EVIDENCE_REVIEW_KO.md) · [Runner](experiments/a3-virtualbox-2026-10-27/runner/README_KO.md).
 
 **14 September 2026 — [A3 VirtualBox evidence package](experiments/a3-virtualbox-2026-09-14/README.md):** four paired trials each recorded one accepted successor, and a separate actual VM rollback submission was rejected (nine client records total). The shared-challenge serial case also matches the supplied server log. This is partial L1 coverage; controlled server-side overlap, the complete A3 matrix and hardware-backed L2 remain unvalidated. [한국어 보고서](experiments/a3-virtualbox-2026-09-14/REPORT_KO.md) · [Next-stage plan](experiments/a3-virtualbox-2026-09-14/NEXT_STAGE_KO.md).
 
@@ -121,7 +126,12 @@ Platform Trust
 | v0.2 replay / rollback / substitution | 0 false accepts in 10,000 trials each | Finite empirical result; not a cryptographic proof |
 | v0.2 concurrent fork races | 0 double accepts in 1,000 races | Atomic single-registry result; partitions require checkpoint gossip |
 | v0.2.1 integrated durability prototype | F00-F12 deterministic cases completed | Supplemental single-host observation; not a general crash-consistency or production claim |
+| A3 signed safe-resume loopback | 0 double accepts in 100 mixed challenge races | One online HTTP registry accepted exactly one signed successor and one cooperative simulated action per race; this was not a VirtualBox run |
+| A3 captured VirtualBox restore path | P1→P2 accepted; restored stale P1 blocked | In the captured L1 run, a validly signed candidate from restored P1 was rejected as `ROLLBACK_OR_LOSING_FORK` after the registry had advanced to P2; operator-collected VM evidence, not hypervisor attestation |
+| A3 two-VM race batch | 220 / 220 trials preserved one accepted successor; 0 double accepts | Fresh/shared two-worker races on one online registry; 66/220 had overlapping observed server-processing intervals; the batch did not restore a VM per trial and not every trial demonstrated overlapping server processing |
+| A3 v0.2.3 actual-VM serial matrix | 22 / 22 scenarios passed; 36 snapshot restores and 37 VM starts/readiness successes | `VM_OBSERVED`, but the security claim remains `L1_REGISTRY_RELATIVE_CONTINUATION`; clone-first succeeded 4/4 when current head/state/credential were shared, so original-runtime identity and clone resistance were not established |
 | Entropy-field ablation | 0 replay false accepts / 10,000; 0 double accepts / 1,000 races | Removing entropy fields did not change the tested serialization outcomes |
+| A3 two-VM harness | 22 / 22 trials; 8 / 8 overlapping races with one accept | Snapshot/restore orchestration and single-registry semantics; unsigned guests and no hardware/originality claim |
 
 The most important negative result is preserved: statistical similarity metrics were insufficient for original-versus-fork discrimination. Canonical lineage verification is therefore the governing mechanism; statistical continuity remains an anomaly signal.
 
@@ -150,6 +160,7 @@ pip install -r requirements.txt
 python experiments/iepp_v03_merged.py
 python experiments/iepp_v04_autocorrelation.py
 python -m unittest discover -s reference/iepp_vnext/tests -v
+python reference/iepp_vnext/a3_safe_resume_demo.py --workspace ./a3-demo-output --trials 25
 python reference/iepp_vnext/benchmark.py
 python reference/iepp_vnext/entropy_ablation.py --replay-trials 10000 --fork-races 1000
 ```

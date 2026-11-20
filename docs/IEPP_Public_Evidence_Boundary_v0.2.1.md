@@ -1,7 +1,7 @@
 # IEPP Public Evidence Boundary v0.2.1
 
 Status: public research disclosure policy  
-Date: 2026-08-22
+Date: 2026-08-22; A3 integration update: 2026-09-06
 
 ## Purpose
 
@@ -20,6 +20,10 @@ The public package includes:
 - required negative controls for predictable entropy, key-plus-state compromise, isolated registries, and failed
   statistical original/fork separation;
 - precise evidence levels and limitations.
+
+The public A3 package additionally includes a deliberately cloneable lab credential generator, signed evidence
+client, minimal HTTP registry adapter, mixed-challenge loopback race, machine-readable summary, and a Korean 2-VM
+VirtualBox execution runbook. The reported loopback result is not represented as a completed VirtualBox experiment.
 
 ## Supplemental v0.2.1 durability observation
 
